@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#6d28d9" />
   <title>mam-moid — TKS Project</title>
   <meta name="description" content="Educational TKS prototype using a Teachable Machine image model." />
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.3/dist/teachablemachine-image.min.js"></script>
   <style>
     :root{
       --bg:#f7f7fb; --card:#ffffff; --ink:#17171f; --muted:#66677a;
@@ -159,16 +159,23 @@ function setStatus(message, good=false){
   status.className = "status" + (good ? " good" : "");
 }
 
+function rejectAfter(ms){
+  return new Promise((_, reject) => setTimeout(() => reject(new Error("Model load timed out")), ms));
+}
+
 async function loadModel(){
   try{
+    if (typeof tmImage === "undefined") throw new Error("Teachable Machine library did not load");
     const modelURL = MODEL_URL + "model.json";
     const metadataURL = MODEL_URL + "metadata.json";
-    model = await tmImage.load(modelURL, metadataURL);
+    model = await Promise.race([tmImage.load(modelURL, metadataURL), rejectAfter(15000)]);
     setStatus("AI model loaded successfully.", true);
     if(preview.src) analyzeBtn.disabled = false;
   }catch(err){
     console.error(err);
-    setStatus("Could not load the AI model. Check the model URL and internet connection.");
+    model = null;
+    analyzeBtn.disabled = true;
+    setStatus("AI model failed to load. Reload the page; if this message returns, the model host or network is blocking the model files.");
   }
 }
 
