@@ -1690,6 +1690,37 @@
       }
     }
 
+
+    /* Remove the tiny text printed at the very top of the thumbnail */
+    .thumbTopMask{
+      position:absolute;
+      left:0;
+      right:0;
+      top:0;
+      height:8vh;
+      z-index:4;
+      pointer-events:none;
+      background:
+        linear-gradient(180deg,
+          rgba(2,6,23,.98) 0%,
+          rgba(3,8,26,.94) 55%,
+          rgba(3,8,26,.62) 82%,
+          rgba(3,8,26,0) 100%);
+    }
+
+    @media(max-width:850px){
+      .thumbTopMask{
+        top:11svh;
+        height:6.5svh;
+        background:
+          linear-gradient(180deg,
+            rgba(2,6,23,.98) 0%,
+            rgba(4,10,31,.94) 60%,
+            rgba(4,10,31,.52) 84%,
+            rgba(4,10,31,0) 100%);
+      }
+    }
+
 </style>
   <meta property="og:title" content="Mamoid — Educational AI Imaging Demo" />
   <meta property="og:description" content="Educational AI imaging demo for a student project." />
@@ -1703,6 +1734,7 @@
 <section id="splash" class="splash" aria-label="Mamoid cover">
   <div class="realThumbWrap">
     <img class="realThumb" src="mamoid-thumbnail.jpg" alt="Mamoid — Educational AI Imaging Demo" />
+    <div class="thumbTopMask" aria-hidden="true"></div>
 
     <div class="artStars" aria-hidden="true">
       <i class="artStar" style="left:7%;top:13%;--s:3px;--c:#ffffff;--d:2.2s;--delay:-.4s"></i>
