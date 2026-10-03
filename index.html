@@ -3,173 +3,157 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#6d28d9" />
-  <title>mam-moid — TKS Project</title>
-  <meta name="description" content="Educational TKS prototype using a Teachable Machine image model." />
+  <meta name="theme-color" content="#0f3d4a" />
+  <title>MammoMind Clinical Review — TKS Prototype</title>
+  <meta name="description" content="Educational breast ultrasound AI review prototype for a TKS project. Not for clinical use." />
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
   <style>
     :root{
-      --bg:#f7f7fb; --card:#ffffff; --ink:#17171f; --muted:#66677a;
-      --line:#e9e7f0; --accent:#6d28d9; --accent2:#8b5cf6;
-      --soft:#f1ebff; --ok:#166534; --warn:#92400e; --danger:#991b1b;
-      --shadow:0 18px 50px rgba(31,24,55,.10);
+      --bg:#eef3f5; --panel:#ffffff; --ink:#10242b; --muted:#64737a;
+      --line:#dce5e8; --navy:#123b46; --teal:#157b83; --soft:#e8f4f4;
+      --ok:#1d6b4f; --warn:#8a6117; --danger:#a33b3b; --shadow:0 12px 30px rgba(20,49,59,.08);
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#fbfaff 0%,var(--bg) 50%);color:var(--ink)}
-    .wrap{max-width:1120px;margin:0 auto;padding:32px 18px 64px}
-    header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px}
-    .brand{display:flex;gap:12px;align-items:center}
-    .logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:white;font-weight:900;box-shadow:var(--shadow)}
-    h1{font-size:clamp(1.6rem,3vw,2.5rem);line-height:1.05;margin:0}
-    .sub{color:var(--muted);margin:7px 0 0}
-    .badge{font-size:.82rem;padding:8px 11px;border-radius:999px;background:var(--soft);color:var(--accent);font-weight:700;white-space:nowrap}
-    .hero{display:grid;grid-template-columns:1.12fr .88fr;gap:22px}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:22px}
-    .upload{border:2px dashed #cfc7e8;border-radius:18px;padding:24px;text-align:center;background:#fcfbff;transition:.2s}
-    .upload.drag{border-color:var(--accent);background:var(--soft)}
-    .upload h2{margin:2px 0 8px;font-size:1.15rem}
-    .upload p{margin:0 0 15px;color:var(--muted);font-size:.92rem}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
+    .app{min-height:100vh;display:grid;grid-template-columns:230px 1fr}
+    .side{background:var(--navy);color:white;padding:24px 18px;display:flex;flex-direction:column}
+    .brand{display:flex;align-items:center;gap:11px;margin-bottom:32px}
+    .logo{width:40px;height:40px;border-radius:12px;background:#1f8790;display:grid;place-items:center;font-weight:900}
+    .brand h1{font-size:1.05rem;margin:0}.brand p{font-size:.75rem;margin:3px 0 0;color:#bad0d5}
+    .nav{display:grid;gap:8px}.nav div{padding:11px 12px;border-radius:10px;color:#c8d9dd;font-size:.9rem}
+    .nav .active{background:rgba(255,255,255,.11);color:#fff;font-weight:700}
+    .sideFoot{margin-top:auto;font-size:.74rem;line-height:1.45;color:#bad0d5;padding:12px}
+    .main{padding:0 0 40px}
+    .topbar{height:72px;background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+    .topbar h2{margin:0;font-size:1.15rem}.topbar span{font-size:.82rem;color:var(--muted)}
+    .pill{padding:7px 10px;border-radius:999px;background:#fff4d8;color:#76520a;font-weight:800;font-size:.75rem}
+    .content{max-width:1180px;margin:0 auto;padding:26px}
+    .intro{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;margin-bottom:18px}
+    .intro h3{font-size:1.75rem;margin:0 0 6px}.intro p{margin:0;color:var(--muted)}
+    .caseTag{font-size:.8rem;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:20px}
+    .cardTitle{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#647a82;margin-bottom:13px}
+    .caseFields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:15px}
+    .field label{display:block;font-size:.75rem;font-weight:800;color:var(--muted);margin-bottom:6px}
+    .field input,.field select{width:100%;border:1px solid var(--line);background:#fbfcfc;border-radius:10px;padding:10px 11px;color:var(--ink)}
+    .upload{border:2px dashed #b8cbd0;border-radius:14px;background:#f9fbfb;padding:28px;text-align:center;transition:.2s}
+    .upload.drag{border-color:var(--teal);background:var(--soft)}
+    .uploadIcon{font-size:2rem;margin-bottom:8px}.upload h4{margin:0 0 5px;font-size:1rem}.upload p{margin:0 0 16px;color:var(--muted);font-size:.86rem}
     input[type=file]{display:none}
-    button,.fileBtn{border:0;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer}
-    .primary,.fileBtn{background:var(--accent);color:white}
-    .secondary{background:#efedf5;color:#30303b}
+    button,.fileBtn{border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}
+    .primary,.fileBtn{background:var(--teal);color:white}.secondary{background:#edf2f3;color:#29434b}
     button:disabled{opacity:.5;cursor:not-allowed}
-    .preview{margin-top:18px;display:none}
-    .preview img{width:100%;max-height:350px;object-fit:contain;border-radius:16px;background:#111}
-    .actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
-    .status{margin-top:14px;border-radius:12px;padding:10px 12px;background:#f7f7fa;color:var(--muted);font-size:.9rem}
-    .status.ok{background:#eefbf1;color:var(--ok)}
-    .status.err{background:#fff1f1;color:var(--danger)}
-    .resultHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-    .eyebrow{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800}
-    .topLabel{font-size:clamp(1.65rem,3vw,2.5rem);font-weight:900;margin:5px 0}
-    .confidence{font-weight:800;color:var(--accent)}
-    .bars{display:grid;gap:13px;margin-top:18px}
-    .barRow{display:grid;gap:7px}
-    .barMeta{display:flex;justify-content:space-between;gap:10px;font-size:.9rem}
-    .track{height:11px;background:#eeeaf7;border-radius:999px;overflow:hidden}
-    .fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:inherit;width:0;transition:width .4s ease}
-    .empty{color:var(--muted);padding:30px 4px;text-align:center}
-    .note{margin-top:18px;padding:13px 14px;border-radius:14px;background:#fff8e8;color:#684912;font-size:.9rem;line-height:1.45}
-    .section{margin-top:22px}
-    .section h3{margin:0 0 9px}
-    .section p{margin:0;color:var(--muted);line-height:1.55}
-    .eval{margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
-    .evalGrid{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:10px}
-    select{width:100%;padding:11px;border-radius:11px;border:1px solid var(--line);background:white}
-    .metric{display:flex;align-items:center;justify-content:space-between;gap:14px;background:#f8f7fb;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:10px}
-    .metric strong{font-size:1.2rem}
-    .lower{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
-    .mini h3{margin:0 0 8px;font-size:1rem}
-    .mini p,.mini li{font-size:.9rem;line-height:1.5;color:var(--muted)}
-    .mini ul{padding-left:18px;margin:8px 0 0}
-    footer{text-align:center;color:var(--muted);font-size:.82rem;margin-top:28px}
-    @media (max-width:820px){.hero{grid-template-columns:1fr}.lower{grid-template-columns:1fr}header{align-items:flex-start}.badge{display:none}}
+    .preview{display:none;margin-top:16px}
+    .scanFrame{background:#0b1012;border-radius:13px;padding:8px}
+    .scanFrame img{display:block;width:100%;max-height:390px;object-fit:contain;border-radius:9px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .status{margin-top:13px;padding:10px 12px;background:#f4f6f7;border-radius:10px;color:var(--muted);font-size:.84rem}
+    .status.ok{background:#edf8f2;color:var(--ok)}.status.err{background:#fff0f0;color:var(--danger)}
+    .resultEmpty{min-height:360px;display:grid;place-items:center;text-align:center;color:var(--muted);padding:35px}
+    .resultEmpty .icon{font-size:2.6rem;display:block;margin-bottom:12px}
+    .eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900}
+    .topLabel{font-size:2.15rem;font-weight:900;margin:7px 0 3px}
+    .confidence{font-weight:800;color:var(--teal)}
+    .divider{height:1px;background:var(--line);margin:18px 0}
+    .bars{display:grid;gap:12px}.barRow{display:grid;gap:6px}.barMeta{display:flex;justify-content:space-between;font-size:.87rem}
+    .track{height:9px;background:#edf1f2;border-radius:99px;overflow:hidden}.fill{height:100%;background:var(--teal);border-radius:inherit}
+    .notice{margin-top:17px;padding:12px 13px;border-radius:11px;background:#fff7e5;color:#76520a;font-size:.82rem;line-height:1.45}
+    .miniGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+    .mini{background:white;border:1px solid var(--line);border-radius:14px;padding:16px}.mini strong{display:block;margin-bottom:6px;font-size:.9rem}.mini span{color:var(--muted);font-size:.82rem;line-height:1.45}
+    footer{padding:18px 26px 0;color:#73858b;font-size:.76rem;text-align:center}
+    @media(max-width:900px){.app{grid-template-columns:1fr}.side{display:none}.grid{grid-template-columns:1fr}.miniGrid{grid-template-columns:1fr}.caseFields{grid-template-columns:1fr}.topbar{padding:0 18px}.content{padding:18px}.intro{align-items:flex-start;flex-direction:column}}
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo">AI</div>
-        <div>
-          <h1>mam-moid</h1>
-          <p class="sub">TKS educational machine-learning prototype</p>
-        </div>
-      </div>
-      <div class="badge">Teachable Machine + TensorFlow.js</div>
-    </header>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <div class="logo">M</div>
+      <div><h1>MammoMind</h1><p>Clinical Review Prototype</p></div>
+    </div>
+    <div class="nav">
+      <div class="active">▣ Ultrasound Review</div>
+      <div>◫ Case History</div>
+      <div>◇ Model Evaluation</div>
+      <div>⚙ Research Settings</div>
+    </div>
+    <div class="sideFoot">TKS research prototype<br>Educational use only<br>Not a medical device</div>
+  </aside>
 
-    <section class="hero">
-      <div class="card">
-        <div id="dropZone" class="upload">
-          <h2>Upload an image</h2>
-          <p>Choose or drag an image here. Processing happens in your browser.</p>
-          <label class="fileBtn" for="fileInput">Choose image</label>
-          <input id="fileInput" type="file" accept="image/*" />
-        </div>
+  <main class="main">
+    <div class="topbar">
+      <div><h2>Breast Ultrasound Review</h2><span>AI-assisted image classification prototype</span></div>
+      <div class="pill">RESEARCH MODE</div>
+    </div>
 
-        <div id="previewBox" class="preview">
-          <img id="preview" alt="Uploaded image preview" />
-          <div class="actions">
-            <button id="analyzeBtn" class="primary" disabled>Analyze image</button>
-            <button id="resetBtn" class="secondary">Reset</button>
-          </div>
-        </div>
-        <div id="status" class="status">Loading AI model…</div>
+    <div class="content">
+      <div class="intro">
+        <div><h3>New ultrasound case</h3><p>Upload a breast ultrasound image to generate a prototype AI assessment.</p></div>
+        <div class="caseTag">Demo workflow • Do not enter real patient information</div>
       </div>
 
-      <div class="card">
-        <div id="resultEmpty" class="empty">
-          <strong>No prediction yet.</strong><br />
-          Upload an image and press <em>Analyze image</em>.
+      <section class="grid">
+        <div class="card">
+          <div class="cardTitle">Case input</div>
+          <div class="caseFields">
+            <div class="field"><label>Case ID</label><input value="DEMO-001" aria-label="Demo case ID"></div>
+            <div class="field"><label>Scan type</label><select><option>Breast ultrasound</option></select></div>
+          </div>
+
+          <div id="dropZone" class="upload">
+            <div class="uploadIcon">⌁</div>
+            <h4>Upload ultrasound image</h4>
+            <p>PNG, JPG or JPEG screenshot. Processing occurs in your browser.</p>
+            <label class="fileBtn" for="fileInput">Select ultrasound</label>
+            <input id="fileInput" type="file" accept="image/*">
+          </div>
+
+          <div id="previewBox" class="preview">
+            <div class="scanFrame"><img id="preview" alt="Uploaded ultrasound preview"></div>
+            <div class="actions">
+              <button id="analyzeBtn" class="primary" disabled>Run AI review</button>
+              <button id="resetBtn" class="secondary">Clear case</button>
+            </div>
+          </div>
+
+          <div id="status" class="status">Loading research model…</div>
         </div>
 
-        <div id="resultBox" style="display:none">
-          <div class="resultHead">
-            <div>
-              <div class="eyebrow">Top prediction</div>
-              <div id="topLabel" class="topLabel">—</div>
-              <div id="topConfidence" class="confidence">—</div>
-            </div>
-          </div>
-          <div id="bars" class="bars"></div>
-
-          <div class="note">
-            <strong>Important:</strong> model confidence is not the same as model accuracy.
-            A 100% confidence score only describes this prediction. It does not prove that the model is 100% accurate.
+        <div class="card">
+          <div class="cardTitle">AI assessment</div>
+          <div id="resultEmpty" class="resultEmpty">
+            <div><span class="icon">⌕</span><strong>No scan analyzed yet</strong><br><span>Upload an ultrasound image and run the AI review.</span></div>
           </div>
 
-          <div class="eval">
-            <h3 style="margin:0">Evaluation mode</h3>
-            <p style="margin:5px 0 0;color:var(--muted);font-size:.9rem">
-              If you know the image's real label, record it here to calculate test accuracy during this session.
-            </p>
-            <div class="evalGrid">
-              <select id="truthSelect" aria-label="True label"></select>
-              <button id="recordBtn" class="secondary">Record test</button>
-            </div>
-            <div class="metric">
-              <span>Session test accuracy</span>
-              <strong id="accuracyMetric">0 / 0 —</strong>
-            </div>
+          <div id="resultBox" style="display:none">
+            <div class="eyebrow">Prototype classification</div>
+            <div id="topLabel" class="topLabel">—</div>
+            <div id="topConfidence" class="confidence">—</div>
+            <div class="divider"></div>
+            <div class="eyebrow" style="margin-bottom:10px">Class probabilities</div>
+            <div id="bars" class="bars"></div>
+            <div class="notice"><strong>Research prototype only.</strong> This output is not a diagnosis, has not been clinically validated, and must not be used for patient-care decisions.</div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="lower">
-      <article class="card mini">
-        <h3>How it works</h3>
-        <p>Your exported Teachable Machine model runs with TensorFlow.js and returns a probability for every class.</p>
-      </article>
-      <article class="card mini">
-        <h3>Better testing</h3>
-        <ul>
-          <li>Use images the model never trained on.</li>
-          <li>Test every class, not just one.</li>
-          <li>Keep the test set separate from training data.</li>
-        </ul>
-      </article>
-      <article class="card mini">
-        <h3>Project limitation</h3>
-        <p>This is a classroom/research prototype. It is not validated for medical diagnosis and should not be used for healthcare decisions.</p>
-      </article>
-    </section>
+      <section class="miniGrid">
+        <div class="mini"><strong>1. Upload scan</strong><span>A clinician-style workflow for selecting a breast ultrasound image.</span></div>
+        <div class="mini"><strong>2. AI review</strong><span>The research model returns a predicted class and confidence distribution.</span></div>
+        <div class="mini"><strong>3. Human review</strong><span>In a real clinical system, qualified clinicians would interpret imaging alongside the full medical context.</span></div>
+      </section>
 
-    <footer>
-      Educational prototype • Predictions run locally in the browser • Not a medical device
-    </footer>
+      <footer>MammoMind • TKS educational research prototype • Not for clinical use</footer>
+    </div>
   </main>
+</div>
 
 <script>
 const MODEL_BASE = "https://teachablemachine.withgoogle.com/models/3cIuGEPRp/";
 let model = null;
 let currentPredictions = [];
-let currentTopLabel = null;
-let testsCorrect = 0;
-let testsTotal = 0;
 
 const fileInput = document.getElementById("fileInput");
 const dropZone = document.getElementById("dropZone");
@@ -183,147 +167,89 @@ const resultBox = document.getElementById("resultBox");
 const topLabelEl = document.getElementById("topLabel");
 const topConfidenceEl = document.getElementById("topConfidence");
 const bars = document.getElementById("bars");
-const truthSelect = document.getElementById("truthSelect");
-const recordBtn = document.getElementById("recordBtn");
-const accuracyMetric = document.getElementById("accuracyMetric");
 
-function setStatus(message, type="") {
-  statusEl.textContent = message;
-  statusEl.className = "status" + (type ? " " + type : "");
+function setStatus(message,type=""){
+  statusEl.textContent=message;
+  statusEl.className="status"+(type?" "+type:"");
 }
 
-async function loadModel() {
-  try {
-    const modelURL = MODEL_BASE + "model.json";
-    const metadataURL = MODEL_BASE + "metadata.json";
-    model = await tmImage.load(modelURL, metadataURL);
-
-    const labels = typeof model.getClassLabels === "function"
-      ? model.getClassLabels()
-      : [];
-
-    truthSelect.innerHTML = "";
-    if (labels.length) {
-      labels.forEach(label => {
-        const opt = document.createElement("option");
-        opt.value = label;
-        opt.textContent = label;
-        truthSelect.appendChild(opt);
-      });
-    } else {
-      const opt = document.createElement("option");
-      opt.textContent = "Run one prediction first";
-      truthSelect.appendChild(opt);
-      recordBtn.disabled = true;
-    }
-
-    analyzeBtn.disabled = !preview.src;
-    setStatus("Model loaded successfully. Ready to analyze.", "ok");
-  } catch (error) {
+async function loadModel(){
+  try{
+    model=await tmImage.load(MODEL_BASE+"model.json",MODEL_BASE+"metadata.json");
+    analyzeBtn.disabled=!preview.src;
+    setStatus("Research model loaded. Ready for ultrasound review.","ok");
+  }catch(error){
     console.error(error);
-    setStatus("The model could not load. Check your internet connection and try again.", "err");
+    setStatus("The research model could not load. Check your connection and reload.","err");
   }
 }
 
-function useFile(file) {
-  if (!file || !file.type.startsWith("image/")) {
-    setStatus("Please choose a valid image file.", "err");
+function useFile(file){
+  if(!file||!file.type.startsWith("image/")){
+    setStatus("Please choose a valid image file.","err");
     return;
   }
-  const url = URL.createObjectURL(file);
-  preview.onload = () => {
-    previewBox.style.display = "block";
-    analyzeBtn.disabled = !model;
-    setStatus(model ? "Image ready. Press Analyze image." : "Image ready. Waiting for model to load…");
+  const url=URL.createObjectURL(file);
+  preview.onload=()=>{
+    previewBox.style.display="block";
+    analyzeBtn.disabled=!model;
+    setStatus(model?"Ultrasound image ready. Select Run AI review.":"Image ready. Waiting for model…");
   };
-  preview.src = url;
-  resultBox.style.display = "none";
-  resultEmpty.style.display = "block";
+  preview.src=url;
+  resultBox.style.display="none";
+  resultEmpty.style.display="grid";
 }
 
-fileInput.addEventListener("change", e => useFile(e.target.files[0]));
-["dragenter","dragover"].forEach(ev => dropZone.addEventListener(ev, e => {
-  e.preventDefault(); dropZone.classList.add("drag");
-}));
-["dragleave","drop"].forEach(ev => dropZone.addEventListener(ev, e => {
-  e.preventDefault(); dropZone.classList.remove("drag");
-}));
-dropZone.addEventListener("drop", e => useFile(e.dataTransfer.files[0]));
+fileInput.addEventListener("change",e=>useFile(e.target.files[0]));
+["dragenter","dragover"].forEach(ev=>dropZone.addEventListener(ev,e=>{e.preventDefault();dropZone.classList.add("drag")}));
+["dragleave","drop"].forEach(ev=>dropZone.addEventListener(ev,e=>{e.preventDefault();dropZone.classList.remove("drag")}));
+dropZone.addEventListener("drop",e=>useFile(e.dataTransfer.files[0]));
 
-analyzeBtn.addEventListener("click", async () => {
-  if (!model || !preview.src) return;
-  analyzeBtn.disabled = true;
-  setStatus("Analyzing image…");
-  try {
-    const predictions = await model.predict(preview);
-    predictions.sort((a,b) => b.probability - a.probability);
-    currentPredictions = predictions;
-    currentTopLabel = predictions[0]?.className ?? null;
+analyzeBtn.addEventListener("click",async()=>{
+  if(!model||!preview.src)return;
+  analyzeBtn.disabled=true;
+  setStatus("Running prototype AI review…");
+  try{
+    const predictions=await model.predict(preview);
+    predictions.sort((a,b)=>b.probability-a.probability);
+    currentPredictions=predictions;
+    const top=predictions[0];
+    topLabelEl.textContent=top?.className||"Inconclusive";
+    topConfidenceEl.textContent=top?((top.probability*100).toFixed(1)+"% model confidence"):"No result";
 
-    topLabelEl.textContent = currentTopLabel || "Unknown";
-    topConfidenceEl.textContent = predictions[0]
-      ? `${(predictions[0].probability * 100).toFixed(1)}% confidence`
-      : "No result";
-
-    bars.innerHTML = "";
-    predictions.forEach(p => {
-      const row = document.createElement("div");
-      row.className = "barRow";
-      const pct = (p.probability * 100).toFixed(1);
-      row.innerHTML = `
-        <div class="barMeta"><strong>${escapeHtml(p.className)}</strong><span>${pct}%</span></div>
-        <div class="track"><div class="fill" style="width:${pct}%"></div></div>`;
+    bars.innerHTML="";
+    predictions.forEach(p=>{
+      const row=document.createElement("div");
+      row.className="barRow";
+      const pct=(p.probability*100).toFixed(1);
+      row.innerHTML='<div class="barMeta"><strong>'+escapeHtml(p.className)+'</strong><span>'+pct+'%</span></div><div class="track"><div class="fill" style="width:'+pct+'%"></div></div>';
       bars.appendChild(row);
     });
 
-    if (truthSelect.options.length === 0 || truthSelect.options[0].textContent === "Run one prediction first") {
-      truthSelect.innerHTML = "";
-      predictions.forEach(p => {
-        const opt = document.createElement("option");
-        opt.value = p.className;
-        opt.textContent = p.className;
-        truthSelect.appendChild(opt);
-      });
-      recordBtn.disabled = false;
-    }
-
-    resultEmpty.style.display = "none";
-    resultBox.style.display = "block";
-    setStatus("Prediction complete.", "ok");
-  } catch (error) {
+    resultEmpty.style.display="none";
+    resultBox.style.display="block";
+    setStatus("Prototype assessment complete.","ok");
+  }catch(error){
     console.error(error);
-    setStatus("Prediction failed. Try another image or reload the page.", "err");
-  } finally {
-    analyzeBtn.disabled = false;
+    setStatus("Review failed. Try another image or reload the page.","err");
+  }finally{
+    analyzeBtn.disabled=false;
   }
 });
 
-recordBtn.addEventListener("click", () => {
-  if (!currentTopLabel || !truthSelect.value) return;
-  testsTotal++;
-  if (currentTopLabel === truthSelect.value) testsCorrect++;
-  const pct = ((testsCorrect / testsTotal) * 100).toFixed(1);
-  accuracyMetric.textContent = `${testsCorrect} / ${testsTotal} — ${pct}%`;
-  recordBtn.textContent = "Recorded ✓";
-  setTimeout(() => recordBtn.textContent = "Record test", 900);
-});
-
-resetBtn.addEventListener("click", () => {
+resetBtn.addEventListener("click",()=>{
   preview.removeAttribute("src");
-  previewBox.style.display = "none";
-  fileInput.value = "";
-  resultBox.style.display = "none";
-  resultEmpty.style.display = "block";
-  currentPredictions = [];
-  currentTopLabel = null;
-  analyzeBtn.disabled = true;
-  setStatus(model ? "Model loaded successfully. Choose another image." : "Loading AI model…", model ? "ok" : "");
+  previewBox.style.display="none";
+  fileInput.value="";
+  resultBox.style.display="none";
+  resultEmpty.style.display="grid";
+  currentPredictions=[];
+  analyzeBtn.disabled=true;
+  setStatus(model?"Research model ready. Select another ultrasound image.":"Loading research model…",model?"ok":"");
 });
 
-function escapeHtml(str) {
-  return String(str).replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[c]));
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 }
 
 loadModel();
