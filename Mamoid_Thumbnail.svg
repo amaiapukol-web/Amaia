@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#020617"/>
+    <stop offset=".52" stop-color="#07142f"/>
+    <stop offset="1" stop-color="#130b2f"/>
+  </linearGradient>
+  <linearGradient id="title" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#9be7ff"/>
+    <stop offset=".48" stop-color="#d7dcff"/>
+    <stop offset="1" stop-color="#c29cff"/>
+  </linearGradient>
+  <radialGradient id="glow" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#8b5cf6" stop-opacity=".9"/>
+    <stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/>
+  </radialGradient>
+  <filter id="blur"><feGaussianBlur stdDeviation="24"/></filter>
+  <filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+  <filter id="shadow"><feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#60a5fa" flood-opacity=".45"/></filter>
+</defs>
+
+<rect width="1600" height="900" fill="url(#bg)"/>
+<circle cx="180" cy="510" r="310" fill="none" stroke="#38bdf8" stroke-opacity=".22" stroke-width="2"/>
+<circle cx="180" cy="510" r="260" fill="none" stroke="#8b5cf6" stroke-opacity=".18" stroke-width="2"/>
+<circle cx="1240" cy="420" r="260" fill="url(#glow)" opacity=".32" filter="url(#blur)"/>
+
+<g fill="#dbeafe" opacity=".7">
+  <circle cx="82" cy="110" r="2"/><circle cx="174" cy="66" r="2"/><circle cx="320" cy="132" r="1.8"/>
+  <circle cx="478" cy="88" r="1.5"/><circle cx="622" cy="145" r="1.6"/><circle cx="760" cy="78" r="2"/>
+  <circle cx="890" cy="128" r="1.5"/><circle cx="1024" cy="84" r="2"/><circle cx="1450" cy="126" r="1.8"/>
+  <circle cx="1500" cy="220" r="1.4"/><circle cx="112" cy="730" r="1.7"/><circle cx="396" cy="778" r="1.4"/>
+</g>
+
+<path d="M0 760 C260 650 430 700 660 810 S1120 900 1600 690" fill="none" stroke="#3b82f6" stroke-opacity=".55" stroke-width="3"/>
+<path d="M0 805 C280 690 500 720 710 830 S1160 910 1600 760" fill="none" stroke="#8b5cf6" stroke-opacity=".5" stroke-width="2"/>
+<path d="M0 835 C330 735 540 770 760 850" fill="none" stroke="#c084fc" stroke-opacity=".35" stroke-width="8" filter="url(#soft)"/>
+
+<g transform="translate(955 145)" filter="url(#shadow)">
+  <rect x="0" y="0" width="505" height="590" rx="34" fill="#071327" fill-opacity=".74" stroke="#60a5fa" stroke-opacity=".75" stroke-width="2"/>
+  <rect x="36" y="40" width="302" height="505" rx="24" fill="#091b36" stroke="#818cf8" stroke-width="2" stroke-opacity=".8"/>
+  <rect x="365" y="42" width="105" height="145" rx="14" fill="#0a1730" stroke="#60a5fa" stroke-opacity=".7"/>
+  <rect x="365" y="220" width="105" height="145" rx="14" fill="#0a1730" stroke="#60a5fa" stroke-opacity=".7"/>
+  <rect x="365" y="398" width="105" height="145" rx="14" fill="#0a1730" stroke="#60a5fa" stroke-opacity=".7"/>
+
+  <path d="M172 92 C105 150 88 240 110 332 C129 409 186 492 248 500 C303 507 315 454 283 385 C249 312 278 242 249 174 C232 135 210 108 172 92Z"
+        fill="#14264a" stroke="#a78bfa" stroke-width="3"/>
+  <path d="M170 110 C152 178 194 195 167 248 C145 290 180 315 155 368 M209 129 C206 196 238 220 210 273 C192 306 224 347 199 421 M138 176 C189 190 217 226 239 262 M146 337 C193 330 230 353 260 388"
+        fill="none" stroke="#d8b4fe" stroke-opacity=".8" stroke-width="2"/>
+  <circle cx="225" cy="300" r="48" fill="#a855f7" opacity=".24" filter="url(#blur)"/>
+  <circle cx="225" cy="300" r="8" fill="#f0abfc"/>
+  
+  <g stroke="#93c5fd" fill="none" stroke-width="2" opacity=".8">
+    <ellipse cx="417" cy="112" rx="35" ry="45"/><path d="M388 112h58M417 68v88"/>
+    <ellipse cx="417" cy="292" rx="36" ry="42"/><path d="M386 286c22 16 43 16 63 0"/>
+    <path d="M389 485c13-44 39-57 58 0-15 30-42 30-58 0z"/>
+  </g>
+  <g stroke="#38bdf8" stroke-opacity=".4">
+    <line x1="20" y1="84" x2="20" y2="510"/><line x1="486" y1="84" x2="486" y2="510"/>
+  </g>
+</g>
+
+<text x="175" y="430" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="168" font-weight="800" fill="url(#title)" filter="url(#shadow)">Mamoid</text>
+<text x="188" y="500" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="28" font-weight="500" fill="#dbeafe" letter-spacing="10">EDUCATIONAL AI IMAGING DEMO</text>
+<text x="190" y="570" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="24" fill="#93c5fd" opacity=".9">Simulated interface • Student project • Not a medical device</text>
+
+<g transform="translate(190 620)">
+  <rect width="185" height="48" rx="24" fill="#5b21b6" fill-opacity=".45" stroke="#a78bfa"/>
+  <text x="92.5" y="31" text-anchor="middle" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18" font-weight="700" fill="#ede9fe">TKS PROJECT</text>
+</g>
+</svg>
