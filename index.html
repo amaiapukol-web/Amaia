@@ -1728,6 +1728,12 @@
       font-size:0 !important;
     }
 
+
+    /* Final cleanup: remove thumbnail image element/placeholder text entirely */
+    .realThumb{
+      display:none !important;
+    }
+
 </style>
   <meta property="og:title" content="Mamoid — Educational AI Imaging Demo" />
   <meta property="og:description" content="Educational AI imaging demo for a student project." />
@@ -1740,7 +1746,6 @@
 <body class="splashOpen">
 <section id="splash" class="splash" aria-label="Mamoid cover">
   <div class="realThumbWrap">
-    <img class="realThumb" src="mamoid-thumbnail.jpg" alt="" aria-hidden="true" onerror="this.style.display='none'" />
 <div class="artStars" aria-hidden="true">
       <i class="artStar" style="left:7%;top:13%;--s:3px;--c:#ffffff;--d:2.2s;--delay:-.4s"></i>
       <i class="artStar" style="left:16%;top:31%;--s:2px;--c:#74c9ff;--d:2.9s;--delay:-1.7s"></i>
