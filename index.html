@@ -986,7 +986,13 @@
 
 
   const splash = document.getElementById("splash");
+  const skipSplash = new URLSearchParams(window.location.search).get("app") === "1";
   const enterAppBtn = document.getElementById("enterAppBtn");
+
+  if (skipSplash) {
+    splash.classList.add("splashHidden");
+    document.body.classList.remove("splashOpen");
+  }
 
   enterAppBtn.addEventListener("click", () => {
     splash.classList.add("splashHidden");
