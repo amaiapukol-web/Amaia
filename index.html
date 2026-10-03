@@ -1069,6 +1069,150 @@
       }
     }
 
+
+    /* Space-drop entry sequence */
+    .realEnterBtn{
+      position:fixed !important;
+      inset:50% auto auto 50% !important;
+      margin:0 !important;
+      bottom:auto !important;
+      transform:translate(-50%,-50%) !important;
+      z-index:10020 !important;
+    }
+    .realEnterBtn:hover{
+      transform:translate(-50%,-50%) scale(1.015) !important;
+    }
+
+    .spaceJump{
+      position:fixed;
+      inset:0;
+      z-index:10010;
+      pointer-events:none;
+      opacity:0;
+      overflow:hidden;
+      background:#01030b;
+      visibility:hidden;
+    }
+    .spaceJump.active{
+      visibility:visible;
+      opacity:1;
+    }
+    .warpGlow{
+      position:absolute;
+      inset:-20%;
+      background:
+        radial-gradient(circle at 50% 48%,rgba(255,255,255,.22) 0 1%,rgba(104,164,255,.16) 8%,rgba(58,78,190,.08) 22%,transparent 46%),
+        radial-gradient(circle at 50% 52%,rgba(125,83,255,.20),transparent 42%),
+        #01030b;
+      animation:warpGlow 2.65s ease-in forwards;
+    }
+    .warpRay{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:2px;
+      height:44vmax;
+      transform-origin:50% 0%;
+      border-radius:99px;
+      background:linear-gradient(180deg,rgba(255,255,255,0),rgba(222,236,255,.95) 42%,rgba(94,154,255,.78) 72%,rgba(117,73,255,0));
+      opacity:0;
+      filter:drop-shadow(0 0 6px rgba(120,174,255,.85));
+      animation:warpRay 1.55s cubic-bezier(.18,.78,.25,1) infinite;
+      animation-delay:var(--delay);
+      transform:rotate(var(--rot)) translateY(4vmax) scaleY(.08);
+    }
+    .landingPlanet{
+      position:absolute;
+      left:50%;
+      top:55%;
+      width:min(54vw,54vh);
+      aspect-ratio:1;
+      border-radius:50%;
+      transform:translate(-50%,-50%) scale(.035);
+      opacity:0;
+      background:
+        radial-gradient(circle at 34% 28%,rgba(202,229,255,.96) 0 3%,transparent 10%),
+        radial-gradient(circle at 40% 34%,#4d76b9 0 13%,#233f7b 31%,#13265a 55%,#09142f 76%,#030816 100%);
+      box-shadow:
+        inset -22px -28px 48px rgba(0,0,0,.5),
+        0 0 34px rgba(115,178,255,.65),
+        0 0 100px rgba(81,88,255,.38);
+    }
+    .landingPlanet::before{
+      content:"";
+      position:absolute;
+      inset:12% 5%;
+      border-radius:50%;
+      background:
+        repeating-linear-gradient(168deg,transparent 0 14px,rgba(198,220,255,.12) 15px 19px,transparent 20px 34px);
+      opacity:.6;
+      transform:rotate(-10deg);
+    }
+    .spaceJump.active .landingPlanet{
+      animation:planetRush 2.65s cubic-bezier(.15,.7,.18,1) forwards;
+    }
+    .spaceJump.active::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:white;
+      opacity:0;
+      animation:landingFlash 2.65s ease forwards;
+    }
+
+    @keyframes warpRay{
+      0%{opacity:0;transform:rotate(var(--rot)) translateY(2vmax) scaleY(.04)}
+      14%{opacity:.9}
+      72%{opacity:.95}
+      100%{opacity:0;transform:rotate(var(--rot)) translateY(40vmax) scaleY(1.9)}
+    }
+    @keyframes warpGlow{
+      0%{transform:scale(.72);filter:blur(0);brightness:1)}
+      48%{transform:scale(1.28);filter:blur(.4px);brightness:1.35)}
+      78%{transform:scale(2.1);filter:blur(1.2px);brightness:1.75)}
+      100%{transform:scale(3.3);filter:blur(2px);brightness:2.1}
+    }
+    @keyframes planetRush{
+      0%,42%{opacity:0;transform:translate(-50%,-36%) scale(.035)}
+      52%{opacity:1;transform:translate(-50%,-42%) scale(.10)}
+      76%{opacity:1;transform:translate(-50%,-50%) scale(.72)}
+      92%{opacity:1;transform:translate(-50%,-50%) scale(4.4)}
+      100%{opacity:1;transform:translate(-50%,-50%) scale(7.2)}
+    }
+    @keyframes landingFlash{
+      0%,86%{opacity:0}
+      92%{opacity:.94}
+      100%{opacity:0}
+    }
+
+    .splash.launching .realEnterBtn{
+      opacity:0 !important;
+      transition:opacity .18s ease !important;
+    }
+    .splash.launching .realThumbWrap{
+      animation:coverDrop .46s cubic-bezier(.2,.8,.2,1) forwards;
+    }
+    @keyframes coverDrop{
+      0%{transform:scale(1);filter:blur(0)}
+      100%{transform:scale(1.13);filter:blur(3px);opacity:.18}
+    }
+
+    @media(max-width:850px){
+      .realEnterBtn{
+        position:fixed !important;
+        inset:50% auto auto 50% !important;
+        margin:0 !important;
+        bottom:auto !important;
+        transform:translate(-50%,-50%) !important;
+      }
+      .landingPlanet{width:52vw}
+      .warpRay{height:62vmax}
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      .warpRay,.warpGlow,.landingPlanet,.spaceJump.active::after,.splash.launching .realThumbWrap{animation-duration:.01ms !important;animation-iteration-count:1 !important}
+    }
+
 </style>
   <meta property="og:title" content="Mamoid — Educational AI Imaging Demo" />
   <meta property="og:description" content="Educational AI imaging demo for a student project." />
@@ -1106,6 +1250,11 @@
   </div>
 </section>
 
+<div id="spaceJump" class="spaceJump" aria-hidden="true">
+  <div class="warpGlow"></div>
+  <div id="warpRays"></div>
+  <div class="landingPlanet"></div>
+</div>
 
 <div class="stars"></div>
 <div class="stars2"></div>
@@ -1318,10 +1467,41 @@
     document.body.classList.remove("splashOpen");
   }
 
+  const spaceJump = document.getElementById("spaceJump");
+  const warpRays = document.getElementById("warpRays");
+
+  if (warpRays && !warpRays.children.length) {
+    for (let i = 0; i < 46; i++) {
+      const ray = document.createElement("i");
+      ray.className = "warpRay";
+      ray.style.setProperty("--rot", (i * (360 / 46)) + "deg");
+      ray.style.setProperty("--delay", (-1.55 + (i % 9) * 0.11) + "s");
+      ray.style.width = (i % 5 === 0 ? 3 : 2) + "px";
+      ray.style.opacity = (0.5 + (i % 4) * 0.12).toString();
+      warpRays.appendChild(ray);
+    }
+  }
+
+  let enteringMamoid = false;
+
   enterAppBtn.addEventListener("click", () => {
-    splash.classList.add("splashHidden");
-    document.body.classList.remove("splashOpen");
-    window.scrollTo({top:0, behavior:"smooth"});
+    if (enteringMamoid) return;
+    enteringMamoid = true;
+    enterAppBtn.disabled = true;
+
+    splash.classList.add("launching");
+    spaceJump.classList.add("active");
+
+    setTimeout(() => {
+      splash.classList.add("splashHidden");
+      document.body.classList.remove("splashOpen");
+      window.scrollTo({top:0, behavior:"auto"});
+    }, 2350);
+
+    setTimeout(() => {
+      spaceJump.classList.remove("active");
+      enteringMamoid = false;
+    }, 2750);
   });
 
   const fileInput =
