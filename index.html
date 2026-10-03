@@ -765,7 +765,21 @@
       }
     }
 
-  </style>
+  
+    /* Playful animated cover upgrade */
+    .realThumbWrap{overflow:hidden;background:#01030a}
+    .realThumb{filter:saturate(1.12) contrast(1.05) brightness(.82);transform:scale(1.03)}
+    .realThumbWrap::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.04),rgba(1,4,14,.28) 62%,rgba(0,0,0,.52))}
+    .coverTitle{position:absolute;z-index:4;left:50%;bottom:155px;transform:translateX(-50%);margin:0;font-size:clamp(4rem,16vw,8rem);line-height:.9;font-weight:950;letter-spacing:-.06em;background:linear-gradient(90deg,#76d7ff 0%,#f8fbff 48%,#95a8ff 75%,#7c3aed 100%);-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 0 14px rgba(70,130,255,.30));white-space:nowrap}
+    .realEnterBtn{z-index:5 !important;bottom:52px !important;padding:18px 34px !important;min-width:250px;font-size:clamp(1.05rem,3.6vw,1.35rem) !important;background:linear-gradient(135deg,rgba(7,14,38,.95),rgba(19,35,88,.92) 58%,rgba(27,50,130,.94)) !important;box-shadow:0 18px 45px rgba(0,0,0,.54),0 0 18px rgba(73,149,255,.62),0 0 42px rgba(43,91,255,.38) !important;animation:coverPulse 2.7s ease-in-out infinite}
+    .coverStars{position:absolute;inset:0;z-index:3;pointer-events:none}
+    .coverStar{position:absolute;line-height:1;text-shadow:0 0 10px currentColor,0 0 20px currentColor;animation:coverTwinkle 1.8s ease-in-out infinite;opacity:.8}
+    .cs1{left:8%;top:18%;color:#fff;font-size:18px;animation-delay:.1s}.cs2{left:18%;top:35%;color:#42b6ff;font-size:11px;animation-delay:.8s}.cs3{left:31%;top:14%;color:#123a8e;font-size:24px;animation-delay:1.2s}.cs4{left:74%;top:18%;color:#fff;font-size:16px;animation-delay:.5s}.cs5{left:87%;top:34%;color:#42b6ff;font-size:24px;animation-delay:1.5s}.cs6{left:64%;top:44%;color:#05070f;font-size:12px;animation-delay:.3s}.cs7{left:24%;top:64%;color:#123a8e;font-size:18px;animation-delay:1s}.cs8{left:76%;top:63%;color:#fff;font-size:14px;animation-delay:1.7s}.cs9{left:39%;top:72%;color:#05070f;font-size:11px;animation-delay:.6s}.cs10{left:58%;top:76%;color:#42b6ff;font-size:22px;animation-delay:1.3s}
+    @keyframes coverTwinkle{0%,100%{opacity:.18;transform:scale(.72) rotate(0deg)}50%{opacity:1;transform:scale(1.24) rotate(12deg)}}
+    @keyframes coverPulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.04)}}
+    @media(max-width:850px){.coverTitle{bottom:145px;font-size:clamp(4.3rem,23vw,7rem)}.realEnterBtn{bottom:42px !important}}
+
+</style>
   <meta property="og:title" content="Mamoid — Educational AI Imaging Demo" />
   <meta property="og:description" content="Educational AI imaging demo for a student project." />
   <meta property="og:image" content="https://amaiapukol-web.github.io/Amaia/mamoid-thumbnail.jpg" />
