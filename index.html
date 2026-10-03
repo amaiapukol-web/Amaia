@@ -1403,6 +1403,208 @@
       .flightStar{filter:none}
     }
 
+
+    /* FINAL speed-of-light transition: no planet, smooth star travel directly into app */
+    .landingPlanet{
+      display:none !important;
+    }
+
+    .realEnterBtn{
+      position:fixed !important;
+      inset:50% auto auto 50% !important;
+      margin:0 !important;
+      bottom:auto !important;
+      transform:translate(-50%,-50%) !important;
+      z-index:10020 !important;
+    }
+
+    .realEnterBtn:hover{
+      transform:translate(-50%,-50%) scale(1.015) !important;
+    }
+
+    .spaceJump{
+      position:fixed !important;
+      inset:0 !important;
+      z-index:10010 !important;
+      pointer-events:none !important;
+      opacity:0 !important;
+      visibility:hidden !important;
+      overflow:hidden !important;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(48,94,190,.12),transparent 18%),
+        linear-gradient(180deg,#01030b 0%,#020513 54%,#040816 100%) !important;
+      transition:opacity .10s linear !important;
+    }
+
+    .spaceJump.active{
+      visibility:visible !important;
+      opacity:1 !important;
+    }
+
+    .spaceJump.arrived{
+      opacity:0 !important;
+      transition:opacity .46s cubic-bezier(.22,.61,.36,1) !important;
+    }
+
+    .warpGlow{
+      position:absolute !important;
+      inset:-18% !important;
+      z-index:1 !important;
+      background:
+        radial-gradient(circle at 50% 49%,rgba(255,255,255,.12) 0 1%,rgba(115,175,255,.14) 8%,rgba(65,94,215,.07) 21%,transparent 43%),
+        radial-gradient(circle at 50% 50%,rgba(120,88,255,.12),transparent 36%) !important;
+      animation:finalWarpGlow 2.22s cubic-bezier(.16,.67,.2,1) forwards !important;
+      will-change:transform,filter;
+    }
+
+    .starTunnel{
+      position:absolute !important;
+      inset:0 !important;
+      z-index:2 !important;
+      overflow:hidden !important;
+      pointer-events:none !important;
+    }
+
+    .flightStar{
+      position:absolute !important;
+      left:50% !important;
+      top:50% !important;
+      width:var(--size) !important;
+      height:var(--size) !important;
+      border-radius:999px !important;
+      background:rgba(240,247,255,.96) !important;
+      box-shadow:
+        0 0 5px rgba(220,235,255,.95),
+        0 0 12px rgba(100,170,255,.58) !important;
+      opacity:0;
+      transform:translate(-50%,-50%) scale(.08);
+      animation:finalStarFly var(--dur) cubic-bezier(.12,.72,.23,1) infinite !important;
+      animation-delay:var(--delay) !important;
+      will-change:transform,opacity;
+    }
+
+    .flightStar::after{
+      content:"" !important;
+      position:absolute !important;
+      left:50% !important;
+      top:50% !important;
+      width:1px !important;
+      height:var(--trail) !important;
+      transform:translate(-50%,-5%) rotate(var(--angle)) !important;
+      transform-origin:50% 5% !important;
+      background:linear-gradient(180deg,rgba(240,248,255,.98),rgba(110,170,255,.45),transparent) !important;
+      opacity:.88 !important;
+    }
+
+    #warpRays{
+      position:absolute !important;
+      inset:0 !important;
+      z-index:3 !important;
+      opacity:.62 !important;
+    }
+
+    .warpRay{
+      position:absolute !important;
+      left:50% !important;
+      top:50% !important;
+      width:2px;
+      height:54vmax !important;
+      transform-origin:50% 0% !important;
+      border-radius:99px !important;
+      background:linear-gradient(180deg,rgba(255,255,255,0),rgba(230,240,255,.94) 42%,rgba(94,154,255,.68) 72%,rgba(117,73,255,0)) !important;
+      opacity:0;
+      filter:blur(.12px) drop-shadow(0 0 6px rgba(120,174,255,.72)) !important;
+      animation:finalWarpRay 1.72s cubic-bezier(.18,.78,.25,1) infinite !important;
+      animation-delay:var(--delay) !important;
+      transform:rotate(var(--rot)) translateY(4vmax) scaleY(.08);
+      will-change:transform,opacity;
+    }
+
+    .spaceJump.active::after{
+      content:"" !important;
+      position:absolute !important;
+      inset:0 !important;
+      z-index:6 !important;
+      background:white !important;
+      opacity:0;
+      animation:finalArrivalFlash 2.22s ease forwards !important;
+    }
+
+    .splash.launching .realEnterBtn{
+      opacity:0 !important;
+      transition:opacity .15s ease !important;
+    }
+
+    .splash.launching .realThumbWrap{
+      animation:finalCoverLift .34s cubic-bezier(.2,.8,.2,1) forwards !important;
+    }
+
+    @keyframes finalStarFly{
+      0%{
+        opacity:0;
+        transform:translate(-50%,-50%) translate(0,0) scale(.08);
+      }
+      13%{opacity:.88}
+      70%{opacity:1}
+      100%{
+        opacity:0;
+        transform:translate(-50%,-50%) translate(var(--dx),var(--dy)) scale(1.38);
+      }
+    }
+
+    @keyframes finalWarpRay{
+      0%{
+        opacity:0;
+        transform:rotate(var(--rot)) translateY(2vmax) scaleY(.04);
+      }
+      16%{opacity:.82}
+      72%{opacity:.9}
+      100%{
+        opacity:0;
+        transform:rotate(var(--rot)) translateY(42vmax) scaleY(1.85);
+      }
+    }
+
+    @keyframes finalWarpGlow{
+      0%{transform:scale(.82);filter:blur(0) brightness(.88)}
+      48%{transform:scale(1.22);filter:blur(.32px) brightness(1.12)}
+      82%{transform:scale(1.95);filter:blur(.82px) brightness(1.40)}
+      100%{transform:scale(2.65);filter:blur(1.3px) brightness(1.68)}
+    }
+
+    @keyframes finalArrivalFlash{
+      0%,85%{opacity:0}
+      92%{opacity:.34}
+      100%{opacity:0}
+    }
+
+    @keyframes finalCoverLift{
+      0%{transform:scale(1);filter:blur(0);opacity:1}
+      100%{transform:scale(1.08);filter:blur(2px);opacity:.14}
+    }
+
+    @media(max-width:850px){
+      .realEnterBtn{
+        position:fixed !important;
+        inset:50% auto auto 50% !important;
+        margin:0 !important;
+        bottom:auto !important;
+        transform:translate(-50%,-50%) !important;
+      }
+      .warpRay{height:62vmax !important}
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      .warpRay,
+      .warpGlow,
+      .flightStar,
+      .spaceJump.active::after,
+      .splash.launching .realThumbWrap{
+        animation-duration:.01ms !important;
+        animation-iteration-count:1 !important;
+      }
+    }
+
 </style>
   <meta property="og:title" content="Mamoid — Educational AI Imaging Demo" />
   <meta property="og:description" content="Educational AI imaging demo for a student project." />
@@ -1444,7 +1646,6 @@
   <div class="warpGlow"></div>
   <div id="starTunnel" class="starTunnel"></div>
   <div id="warpRays"></div>
-  <div class="landingPlanet"></div>
 </div>
 
 <div class="stars"></div>
@@ -1662,35 +1863,36 @@
   const warpRays = document.getElementById("warpRays");
   const starTunnel = document.getElementById("starTunnel");
 
-  if (warpRays && !warpRays.children.length) {
-    for (let i = 0; i < 64; i++) {
+  if (warpRays) {
+    warpRays.innerHTML = "";
+    for (let i = 0; i < 56; i++) {
       const ray = document.createElement("i");
       ray.className = "warpRay";
-      ray.style.setProperty("--rot", (i * (360 / 64)) + "deg");
-      ray.style.setProperty("--delay", (-1.85 + (i % 13) * 0.09) + "s");
+      ray.style.setProperty("--rot", (i * (360 / 56)) + "deg");
+      ray.style.setProperty("--delay", (-1.72 + (i % 12) * 0.09) + "s");
       ray.style.width = (i % 7 === 0 ? 3 : 2) + "px";
-      ray.style.opacity = (0.42 + (i % 5) * 0.1).toString();
       warpRays.appendChild(ray);
     }
   }
 
-  if (starTunnel && !starTunnel.children.length) {
-    for (let i = 0; i < 84; i++) {
+  if (starTunnel) {
+    starTunnel.innerHTML = "";
+    for (let i = 0; i < 88; i++) {
       const star = document.createElement("i");
       star.className = "flightStar";
 
       const angle = (i * 137.508) * Math.PI / 180;
-      const radius = 62 + (i % 9) * 8;
+      const radius = 58 + (i % 10) * 8;
       const dx = Math.cos(angle) * radius;
       const dy = Math.sin(angle) * radius;
 
       star.style.setProperty("--dx", dx.toFixed(2) + "vmax");
       star.style.setProperty("--dy", dy.toFixed(2) + "vmax");
-      star.style.setProperty("--size", (1 + (i % 4) * .55).toFixed(2) + "px");
-      star.style.setProperty("--trail", (24 + (i % 6) * 11) + "px");
+      star.style.setProperty("--size", (1 + (i % 4) * 0.55).toFixed(2) + "px");
+      star.style.setProperty("--trail", (22 + (i % 6) * 10) + "px");
       star.style.setProperty("--angle", ((angle * 180 / Math.PI) + 90).toFixed(2) + "deg");
-      star.style.setProperty("--dur", (1.25 + (i % 8) * .095).toFixed(2) + "s");
-      star.style.setProperty("--delay", (-2.4 + (i % 17) * .11).toFixed(2) + "s");
+      star.style.setProperty("--dur", (1.18 + (i % 8) * 0.09).toFixed(2) + "s");
+      star.style.setProperty("--delay", (-2.2 + (i % 18) * 0.1).toFixed(2) + "s");
 
       starTunnel.appendChild(star);
     }
@@ -1710,16 +1912,16 @@
       splash.classList.add("splashHidden");
       document.body.classList.remove("splashOpen");
       window.scrollTo({top:0, behavior:"auto"});
-    }, 2720);
+    }, 1780);
 
     setTimeout(() => {
       spaceJump.classList.add("arrived");
-    }, 2780);
+    }, 1830);
 
     setTimeout(() => {
       spaceJump.classList.remove("active", "arrived");
       enteringMamoid = false;
-    }, 3420);
+    }, 2320);
   });
 
   const fileInput =
