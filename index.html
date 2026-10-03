@@ -1213,6 +1213,196 @@
       .warpRay,.warpGlow,.landingPlanet,.spaceJump.active::after,.splash.launching .realThumbWrap{animation-duration:.01ms !important;animation-iteration-count:1 !important}
     }
 
+
+    /* Smooth cinematic space-entry polish */
+    .spaceJump{
+      transition:opacity .08s linear;
+      background:
+        radial-gradient(circle at 50% 48%,rgba(38,72,150,.14),transparent 24%),
+        linear-gradient(180deg,#01020a 0%,#020515 52%,#040718 100%) !important;
+    }
+
+    .spaceJump.arrived{
+      opacity:0 !important;
+      transition:opacity .58s cubic-bezier(.22,.61,.36,1) !important;
+    }
+
+    .starTunnel{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      overflow:hidden;
+      pointer-events:none;
+    }
+
+    .flightStar{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:var(--size);
+      height:var(--size);
+      border-radius:999px;
+      background:rgba(235,245,255,.96);
+      box-shadow:
+        0 0 5px rgba(212,232,255,.9),
+        0 0 13px rgba(94,160,255,.6);
+      opacity:0;
+      transform:translate(-50%,-50%) scale(.1);
+      animation:starFly var(--dur) cubic-bezier(.12,.72,.23,1) infinite;
+      animation-delay:var(--delay);
+    }
+
+    .flightStar::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:1px;
+      height:var(--trail);
+      transform:translate(-50%,-5%) rotate(var(--angle));
+      transform-origin:50% 5%;
+      background:linear-gradient(180deg,rgba(236,246,255,.98),rgba(109,169,255,.48),transparent);
+      filter:blur(.15px);
+      opacity:.88;
+    }
+
+    @keyframes starFly{
+      0%{
+        opacity:0;
+        transform:translate(-50%,-50%) translate(0,0) scale(.08);
+      }
+      12%{opacity:.85}
+      70%{opacity:1}
+      100%{
+        opacity:0;
+        transform:translate(-50%,-50%) translate(var(--dx),var(--dy)) scale(1.4);
+      }
+    }
+
+    .warpGlow{
+      z-index:1;
+      animation:warpGlowSmooth 3.25s cubic-bezier(.16,.67,.2,1) forwards !important;
+    }
+
+    #warpRays{
+      position:absolute;
+      inset:0;
+      z-index:3;
+      opacity:.72;
+    }
+
+    .warpRay{
+      height:52vmax !important;
+      animation-duration:1.85s !important;
+      filter:blur(.2px) drop-shadow(0 0 7px rgba(128,180,255,.78)) !important;
+    }
+
+    .landingPlanet{
+      z-index:4;
+      top:57% !important;
+      width:min(58vw,58vh) !important;
+      overflow:visible;
+      will-change:transform,opacity,filter;
+      background:
+        radial-gradient(circle at 30% 24%,rgba(235,247,255,.96) 0 2.2%,rgba(163,205,255,.28) 4%,transparent 10%),
+        radial-gradient(ellipse at 66% 30%,rgba(111,172,222,.48) 0 8%,transparent 18%),
+        radial-gradient(ellipse at 30% 62%,rgba(91,111,184,.46) 0 12%,transparent 23%),
+        radial-gradient(ellipse at 72% 72%,rgba(56,70,136,.58) 0 12%,transparent 25%),
+        repeating-linear-gradient(168deg,rgba(255,255,255,.025) 0 5px,rgba(41,69,131,.09) 6px 11px,rgba(255,255,255,.015) 12px 18px),
+        radial-gradient(circle at 38% 32%,#5d88c7 0 13%,#345f9e 32%,#213f79 54%,#11244f 74%,#050b1c 100%) !important;
+      box-shadow:
+        inset -34px -42px 70px rgba(0,0,0,.58),
+        inset 16px 16px 34px rgba(176,220,255,.12),
+        0 0 0 2px rgba(161,212,255,.12),
+        0 0 24px rgba(174,222,255,.62),
+        0 0 72px rgba(79,146,255,.45),
+        0 0 150px rgba(90,74,255,.28) !important;
+      filter:saturate(1.08);
+    }
+
+    .landingPlanet::before{
+      inset:-4% !important;
+      border-radius:50% !important;
+      background:
+        radial-gradient(circle at 26% 28%,transparent 0 60%,rgba(164,215,255,.18) 74%,rgba(200,232,255,.48) 91%,transparent 100%),
+        repeating-linear-gradient(162deg,transparent 0 18px,rgba(210,231,255,.08) 19px 23px,transparent 24px 42px) !important;
+      opacity:.84 !important;
+      filter:blur(.35px);
+    }
+
+    .landingPlanet::after{
+      content:"";
+      position:absolute;
+      inset:-7%;
+      border-radius:50%;
+      border:1px solid rgba(176,220,255,.44);
+      box-shadow:
+        0 0 20px rgba(148,205,255,.52),
+        0 0 60px rgba(92,137,255,.36),
+        inset 0 0 26px rgba(177,222,255,.14);
+      opacity:.78;
+    }
+
+    .spaceJump.active .landingPlanet{
+      animation:planetRushSmooth 3.25s cubic-bezier(.12,.72,.16,1) forwards !important;
+    }
+
+    .spaceJump.active::after{
+      animation:landingFlashSmooth 3.25s ease forwards !important;
+      z-index:10;
+    }
+
+    @keyframes warpGlowSmooth{
+      0%{transform:scale(.78);filter:blur(0) brightness(.82)}
+      35%{transform:scale(1.04);filter:blur(.25px) brightness(1.05)}
+      68%{transform:scale(1.7);filter:blur(.7px) brightness(1.3)}
+      88%{transform:scale(2.45);filter:blur(1.2px) brightness(1.6)}
+      100%{transform:scale(3.15);filter:blur(1.8px) brightness(1.95)}
+    }
+
+    @keyframes planetRushSmooth{
+      0%,30%{
+        opacity:0;
+        filter:blur(1.8px);
+        transform:translate(-50%,-42%) scale(.025);
+      }
+      41%{
+        opacity:.42;
+        filter:blur(1px);
+        transform:translate(-50%,-44%) scale(.07);
+      }
+      58%{
+        opacity:1;
+        filter:blur(.15px);
+        transform:translate(-50%,-47%) scale(.22);
+      }
+      76%{
+        opacity:1;
+        transform:translate(-50%,-50%) scale(.78);
+      }
+      89%{
+        opacity:1;
+        transform:translate(-50%,-51%) scale(2.25);
+      }
+      100%{
+        opacity:1;
+        filter:blur(.5px);
+        transform:translate(-50%,-52%) scale(7.8);
+      }
+    }
+
+    @keyframes landingFlashSmooth{
+      0%,84%{opacity:0}
+      91%{opacity:.36}
+      96%{opacity:.7}
+      100%{opacity:0}
+    }
+
+    @media(max-width:850px){
+      .landingPlanet{width:62vw !important}
+      .flightStar{filter:none}
+    }
+
 </style>
   <meta property="og:title" content="Mamoid — Educational AI Imaging Demo" />
   <meta property="og:description" content="Educational AI imaging demo for a student project." />
@@ -1252,6 +1442,7 @@
 
 <div id="spaceJump" class="spaceJump" aria-hidden="true">
   <div class="warpGlow"></div>
+  <div id="starTunnel" class="starTunnel"></div>
   <div id="warpRays"></div>
   <div class="landingPlanet"></div>
 </div>
@@ -1469,16 +1660,39 @@
 
   const spaceJump = document.getElementById("spaceJump");
   const warpRays = document.getElementById("warpRays");
+  const starTunnel = document.getElementById("starTunnel");
 
   if (warpRays && !warpRays.children.length) {
-    for (let i = 0; i < 46; i++) {
+    for (let i = 0; i < 64; i++) {
       const ray = document.createElement("i");
       ray.className = "warpRay";
-      ray.style.setProperty("--rot", (i * (360 / 46)) + "deg");
-      ray.style.setProperty("--delay", (-1.55 + (i % 9) * 0.11) + "s");
-      ray.style.width = (i % 5 === 0 ? 3 : 2) + "px";
-      ray.style.opacity = (0.5 + (i % 4) * 0.12).toString();
+      ray.style.setProperty("--rot", (i * (360 / 64)) + "deg");
+      ray.style.setProperty("--delay", (-1.85 + (i % 13) * 0.09) + "s");
+      ray.style.width = (i % 7 === 0 ? 3 : 2) + "px";
+      ray.style.opacity = (0.42 + (i % 5) * 0.1).toString();
       warpRays.appendChild(ray);
+    }
+  }
+
+  if (starTunnel && !starTunnel.children.length) {
+    for (let i = 0; i < 84; i++) {
+      const star = document.createElement("i");
+      star.className = "flightStar";
+
+      const angle = (i * 137.508) * Math.PI / 180;
+      const radius = 62 + (i % 9) * 8;
+      const dx = Math.cos(angle) * radius;
+      const dy = Math.sin(angle) * radius;
+
+      star.style.setProperty("--dx", dx.toFixed(2) + "vmax");
+      star.style.setProperty("--dy", dy.toFixed(2) + "vmax");
+      star.style.setProperty("--size", (1 + (i % 4) * .55).toFixed(2) + "px");
+      star.style.setProperty("--trail", (24 + (i % 6) * 11) + "px");
+      star.style.setProperty("--angle", ((angle * 180 / Math.PI) + 90).toFixed(2) + "deg");
+      star.style.setProperty("--dur", (1.25 + (i % 8) * .095).toFixed(2) + "s");
+      star.style.setProperty("--delay", (-2.4 + (i % 17) * .11).toFixed(2) + "s");
+
+      starTunnel.appendChild(star);
     }
   }
 
@@ -1496,12 +1710,16 @@
       splash.classList.add("splashHidden");
       document.body.classList.remove("splashOpen");
       window.scrollTo({top:0, behavior:"auto"});
-    }, 2350);
+    }, 2720);
 
     setTimeout(() => {
-      spaceJump.classList.remove("active");
+      spaceJump.classList.add("arrived");
+    }, 2780);
+
+    setTimeout(() => {
+      spaceJump.classList.remove("active", "arrived");
       enteringMamoid = false;
-    }, 2750);
+    }, 3420);
   });
 
   const fileInput =
