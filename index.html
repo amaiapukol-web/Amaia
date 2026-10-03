@@ -712,41 +712,73 @@
       .content{padding:20px}
       .top{padding:0 20px}
     }
+  
+    /* Exact generated Mamoid thumbnail landing screen */
+    .splash{
+      padding:0 !important;
+      background:#020617 !important;
+      overflow:auto;
+    }
+    .splash::before{display:none !important}
+    .realThumbWrap{
+      position:relative;
+      width:100%;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#020617;
+    }
+    .realThumb{
+      width:100%;
+      height:100vh;
+      object-fit:cover;
+      object-position:center;
+      display:block;
+    }
+    .realEnterBtn{
+      position:absolute;
+      left:50%;
+      bottom:max(28px,5vh);
+      transform:translateX(-50%);
+      z-index:2;
+      border:1px solid rgba(255,255,255,.28);
+      border-radius:999px;
+      padding:14px 24px;
+      background:rgba(8,12,32,.78);
+      color:#fff;
+      font-family:inherit;
+      font-size:.95rem;
+      font-weight:900;
+      backdrop-filter:blur(12px);
+      box-shadow:0 12px 40px rgba(0,0,0,.40),0 0 24px rgba(139,92,246,.28);
+      white-space:nowrap;
+    }
+    @media(max-width:850px){
+      .realThumb{
+        height:auto;
+        min-height:100vh;
+        object-fit:cover;
+      }
+      .realEnterBtn{
+        bottom:26px;
+      }
+    }
+
   </style>
   <meta property="og:title" content="Mamoid — Educational AI Imaging Demo" />
   <meta property="og:description" content="Educational AI imaging demo for a student project." />
-  <meta property="og:image" content="https://amaiapukol-web.github.io/Amaia/Mamoid_Thumbnail.svg" />
+  <meta property="og:image" content="https://amaiapukol-web.github.io/Amaia/mamoid-thumbnail.jpg" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content="https://amaiapukol-web.github.io/Amaia/Mamoid_Thumbnail.svg" />
+  <meta name="twitter:image" content="https://amaiapukol-web.github.io/Amaia/mamoid-thumbnail.jpg" />
 </head>
 
 <body class="splashOpen">
 <section id="splash" class="splash" aria-label="Mamoid cover">
-  <div class="splashCard">
-    <div class="splashCopy">
-      <div class="splashKicker">TKS PROJECT</div>
-      <h1 class="splashTitle">Mamoid</h1>
-      <div class="splashSubtitle">Educational AI Imaging Demo</div>
-      <p class="splashDesc">
-        A conceptual student interface exploring how AI-style image classification
-        can be presented for breast-imaging research. Simulated results only.
-      </p>
-      <button id="enterAppBtn" class="enterBtn">Enter Mamoid →</button>
-    </div>
-
-    <div class="coverVisual" aria-hidden="true">
-      <div class="planetArc"></div>
-      <div class="scanPanel">
-        <div class="scanCore"></div>
-        <div class="scanStrip">
-          <div class="scanThumb"></div>
-          <div class="scanThumb"></div>
-          <div class="scanThumb"></div>
-        </div>
-      </div>
-      <div class="orbit"></div>
-    </div>
+  <div class="realThumbWrap">
+    <img class="realThumb" src="mamoid-thumbnail.jpg" alt="Mamoid — Educational AI Imaging Demo" />
+    <button id="enterAppBtn" class="realEnterBtn">Enter Mamoid →</button>
   </div>
 </section>
 
