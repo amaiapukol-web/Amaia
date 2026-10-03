@@ -3,67 +3,91 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#0f3d4a" />
-  <title>MammoMind Clinical Review — TKS Prototype</title>
-  <meta name="description" content="Educational breast ultrasound AI review prototype for a TKS project. Not for clinical use." />
+  <meta name="theme-color" content="#06141a" />
+  <title>MammoMind — AI Ultrasound Review</title>
+  <meta name="description" content="Educational breast ultrasound AI prototype for TKS. Not for clinical use." />
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
   <style>
     :root{
-      --bg:#eef3f5; --panel:#ffffff; --ink:#10242b; --muted:#64737a;
-      --line:#dce5e8; --navy:#123b46; --teal:#157b83; --soft:#e8f4f4;
-      --ok:#1d6b4f; --warn:#8a6117; --danger:#a33b3b; --shadow:0 12px 30px rgba(20,49,59,.08);
+      --bg:#061116;--panel:#0c1b22;--panel2:#10262e;--line:rgba(137,230,236,.13);
+      --ink:#ecfbfc;--muted:#8eabb2;--cyan:#55e6eb;--cyan2:#5eb7ff;--green:#53e3a6;
+      --amber:#ffcd70;--danger:#ff7c8c;--shadow:0 22px 60px rgba(0,0,0,.35);
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
-    .app{min-height:100vh;display:grid;grid-template-columns:230px 1fr}
-    .side{background:var(--navy);color:white;padding:24px 18px;display:flex;flex-direction:column}
-    .brand{display:flex;align-items:center;gap:11px;margin-bottom:32px}
-    .logo{width:40px;height:40px;border-radius:12px;background:#1f8790;display:grid;place-items:center;font-weight:900}
-    .brand h1{font-size:1.05rem;margin:0}.brand p{font-size:.75rem;margin:3px 0 0;color:#bad0d5}
-    .nav{display:grid;gap:8px}.nav div{padding:11px 12px;border-radius:10px;color:#c8d9dd;font-size:.9rem}
-    .nav .active{background:rgba(255,255,255,.11);color:#fff;font-weight:700}
-    .sideFoot{margin-top:auto;font-size:.74rem;line-height:1.45;color:#bad0d5;padding:12px}
-    .main{padding:0 0 40px}
-    .topbar{height:72px;background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px}
-    .topbar h2{margin:0;font-size:1.15rem}.topbar span{font-size:.82rem;color:var(--muted)}
-    .pill{padding:7px 10px;border-radius:999px;background:#fff4d8;color:#76520a;font-weight:800;font-size:.75rem}
-    .content{max-width:1180px;margin:0 auto;padding:26px}
-    .intro{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;margin-bottom:18px}
-    .intro h3{font-size:1.75rem;margin:0 0 6px}.intro p{margin:0;color:var(--muted)}
-    .caseTag{font-size:.8rem;color:var(--muted)}
-    .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
-    .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:20px}
-    .cardTitle{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#647a82;margin-bottom:13px}
-    .caseFields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:15px}
-    .field label{display:block;font-size:.75rem;font-weight:800;color:var(--muted);margin-bottom:6px}
-    .field input,.field select{width:100%;border:1px solid var(--line);background:#fbfcfc;border-radius:10px;padding:10px 11px;color:var(--ink)}
-    .upload{border:2px dashed #b8cbd0;border-radius:14px;background:#f9fbfb;padding:28px;text-align:center;transition:.2s}
-    .upload.drag{border-color:var(--teal);background:var(--soft)}
-    .uploadIcon{font-size:2rem;margin-bottom:8px}.upload h4{margin:0 0 5px;font-size:1rem}.upload p{margin:0 0 16px;color:var(--muted);font-size:.86rem}
+    html{background:var(--bg)}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:
+      radial-gradient(circle at 82% 12%,rgba(48,193,212,.16),transparent 28%),
+      radial-gradient(circle at 16% 86%,rgba(58,113,255,.11),transparent 32%),var(--bg)}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:32px 32px}
+    .app{min-height:100vh;display:grid;grid-template-columns:245px 1fr;position:relative;z-index:1}
+    .side{border-right:1px solid var(--line);background:rgba(6,18,24,.9);backdrop-filter:blur(18px);padding:26px 18px;display:flex;flex-direction:column}
+    .brand{display:flex;gap:12px;align-items:center;margin-bottom:34px}
+    .logo{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-weight:950;color:#041215;background:linear-gradient(135deg,var(--cyan),#8effd9);box-shadow:0 0 30px rgba(85,230,235,.28)}
+    .brand h1{font-size:1.08rem;margin:0;letter-spacing:.01em}.brand p{margin:4px 0 0;color:var(--muted);font-size:.72rem}
+    .nav{display:grid;gap:8px}.nav div{padding:12px 13px;border-radius:11px;color:#89a5ad;font-size:.87rem;border:1px solid transparent}
+    .nav .active{color:white;background:linear-gradient(90deg,rgba(85,230,235,.12),rgba(94,183,255,.06));border-color:rgba(85,230,235,.14);box-shadow:inset 3px 0 var(--cyan)}
+    .sideStat{margin-top:auto;padding:14px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025)}
+    .liveDot{width:7px;height:7px;border-radius:99px;background:var(--green);display:inline-block;margin-right:7px;box-shadow:0 0 12px var(--green)}
+    .sideStat strong{font-size:.78rem}.sideStat p{color:var(--muted);font-size:.72rem;line-height:1.45;margin:8px 0 0}
+    .main{min-width:0}
+    .topbar{height:76px;border-bottom:1px solid var(--line);background:rgba(7,20,26,.65);backdrop-filter:blur(18px);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:3}
+    .topbar h2{margin:0;font-size:1.02rem}.topbar span{display:block;margin-top:3px;color:var(--muted);font-size:.75rem}
+    .research{display:flex;align-items:center;gap:8px;padding:8px 11px;border:1px solid rgba(255,205,112,.22);background:rgba(255,205,112,.07);border-radius:999px;color:#ffd98d;font-size:.72rem;font-weight:900;letter-spacing:.08em}
+    .content{max-width:1240px;margin:0 auto;padding:30px}
+    .heroTitle{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin-bottom:20px}
+    .heroTitle h3{font-size:clamp(1.7rem,4vw,2.65rem);line-height:1;margin:0;background:linear-gradient(90deg,#fff,#a7edf0);-webkit-background-clip:text;color:transparent}
+    .heroTitle p{margin:9px 0 0;color:var(--muted);font-size:.94rem}
+    .caseCode{font-family:ui-monospace,monospace;font-size:.76rem;color:#7cdfe3;border:1px solid var(--line);background:rgba(85,230,235,.04);padding:8px 10px;border-radius:9px}
+    .dashboard{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(350px,.85fr);gap:18px}
+    .panel{border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,rgba(17,39,47,.88),rgba(9,27,34,.92));box-shadow:var(--shadow);overflow:hidden}
+    .panelHead{display:flex;justify-content:space-between;align-items:center;padding:17px 18px;border-bottom:1px solid var(--line)}
+    .panelHead strong{font-size:.8rem;text-transform:uppercase;letter-spacing:.12em}.panelHead span{font-size:.72rem;color:var(--muted)}
+    .panelBody{padding:18px}
+    .fields{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:14px}
+    .field label{display:block;margin:0 0 6px;color:var(--muted);font-size:.7rem;font-weight:850;text-transform:uppercase;letter-spacing:.08em}
+    .field input,.field select{width:100%;border:1px solid var(--line);border-radius:11px;background:#0a171d;color:var(--ink);padding:11px 12px;outline:none}
+    .upload{min-height:320px;border:1px dashed rgba(85,230,235,.26);border-radius:16px;background:radial-gradient(circle at 50% 40%,rgba(85,230,235,.08),transparent 45%),#09171d;display:grid;place-items:center;text-align:center;padding:28px;transition:.25s;position:relative;overflow:hidden}
+    .upload:before,.scanFrame:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%,rgba(85,230,235,.05) 50%,transparent 100%);transform:translateY(-100%);animation:sweep 4.8s linear infinite}
+    @keyframes sweep{to{transform:translateY(100%)}}
+    .upload.drag{border-color:var(--cyan);box-shadow:0 0 32px rgba(85,230,235,.12) inset}
+    .uploadIcon{width:62px;height:62px;border-radius:18px;margin:0 auto 14px;display:grid;place-items:center;border:1px solid rgba(85,230,235,.22);background:rgba(85,230,235,.07);font-size:1.8rem;box-shadow:0 0 30px rgba(85,230,235,.08)}
+    .upload h4{font-size:1.1rem;margin:0 0 7px}.upload p{max-width:410px;margin:0 auto 17px;color:var(--muted);font-size:.82rem;line-height:1.5}
     input[type=file]{display:none}
-    button,.fileBtn{border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}
-    .primary,.fileBtn{background:var(--teal);color:white}.secondary{background:#edf2f3;color:#29434b}
-    button:disabled{opacity:.5;cursor:not-allowed}
-    .preview{display:none;margin-top:16px}
-    .scanFrame{background:#0b1012;border-radius:13px;padding:8px}
-    .scanFrame img{display:block;width:100%;max-height:390px;object-fit:contain;border-radius:9px}
+    button,.fileBtn{border:0;border-radius:11px;padding:11px 15px;font-weight:900;cursor:pointer;transition:.18s}
+    .primary,.fileBtn{background:linear-gradient(135deg,var(--cyan),#75f7cb);color:#041215;box-shadow:0 8px 26px rgba(85,230,235,.16)}
+    .primary:hover,.fileBtn:hover{transform:translateY(-1px);filter:brightness(1.06)}
+    .secondary{background:#142a32;color:#cae6e9;border:1px solid var(--line)}
+    button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+    .preview{display:none;margin-top:14px}
+    .scanFrame{position:relative;overflow:hidden;background:#020708;border:1px solid rgba(85,230,235,.18);border-radius:16px;padding:8px;box-shadow:inset 0 0 34px rgba(85,230,235,.04)}
+    .scanFrame img{display:block;width:100%;max-height:410px;object-fit:contain;border-radius:10px;filter:contrast(1.04)}
+    .scanCorners:before,.scanCorners:after{content:"";position:absolute;width:28px;height:28px;border-color:var(--cyan);opacity:.8}
+    .scanCorners:before{left:16px;top:16px;border-left:2px solid;border-top:2px solid}.scanCorners:after{right:16px;bottom:16px;border-right:2px solid;border-bottom:2px solid}
     .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .status{margin-top:13px;padding:10px 12px;background:#f4f6f7;border-radius:10px;color:var(--muted);font-size:.84rem}
-    .status.ok{background:#edf8f2;color:var(--ok)}.status.err{background:#fff0f0;color:var(--danger)}
-    .resultEmpty{min-height:360px;display:grid;place-items:center;text-align:center;color:var(--muted);padding:35px}
-    .resultEmpty .icon{font-size:2.6rem;display:block;margin-bottom:12px}
-    .eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900}
-    .topLabel{font-size:2.15rem;font-weight:900;margin:7px 0 3px}
-    .confidence{font-weight:800;color:var(--teal)}
-    .divider{height:1px;background:var(--line);margin:18px 0}
-    .bars{display:grid;gap:12px}.barRow{display:grid;gap:6px}.barMeta{display:flex;justify-content:space-between;font-size:.87rem}
-    .track{height:9px;background:#edf1f2;border-radius:99px;overflow:hidden}.fill{height:100%;background:var(--teal);border-radius:inherit}
-    .notice{margin-top:17px;padding:12px 13px;border-radius:11px;background:#fff7e5;color:#76520a;font-size:.82rem;line-height:1.45}
-    .miniGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
-    .mini{background:white;border:1px solid var(--line);border-radius:14px;padding:16px}.mini strong{display:block;margin-bottom:6px;font-size:.9rem}.mini span{color:var(--muted);font-size:.82rem;line-height:1.45}
-    footer{padding:18px 26px 0;color:#73858b;font-size:.76rem;text-align:center}
-    @media(max-width:900px){.app{grid-template-columns:1fr}.side{display:none}.grid{grid-template-columns:1fr}.miniGrid{grid-template-columns:1fr}.caseFields{grid-template-columns:1fr}.topbar{padding:0 18px}.content{padding:18px}.intro{align-items:flex-start;flex-direction:column}}
+    .status{margin-top:12px;padding:10px 12px;border:1px solid var(--line);background:rgba(255,255,255,.025);border-radius:10px;color:var(--muted);font-size:.79rem}
+    .status.ok{color:#8df3c7;border-color:rgba(83,227,166,.18);background:rgba(83,227,166,.05)}.status.err{color:#ff9ca8;border-color:rgba(255,124,140,.2);background:rgba(255,124,140,.05)}
+    .resultEmpty{min-height:470px;display:grid;place-items:center;text-align:center;color:var(--muted);padding:35px}
+    .orb{width:104px;height:104px;border-radius:50%;margin:0 auto 19px;background:radial-gradient(circle at 36% 33%,#bfffff,var(--cyan) 18%,#164b5c 45%,#081820 72%);box-shadow:0 0 25px rgba(85,230,235,.28),0 0 70px rgba(85,230,235,.12);position:relative}
+    .orb:after{content:"";position:absolute;inset:-10px;border:1px solid rgba(85,230,235,.28);border-radius:50%;animation:pulse 2.5s ease-in-out infinite}
+    @keyframes pulse{50%{transform:scale(1.07);opacity:.35}}
+    .resultEmpty strong{display:block;color:#dff9fb;margin-bottom:7px;font-size:1rem}.resultEmpty span{font-size:.82rem}
+    .eyebrow{font-size:.69rem;text-transform:uppercase;letter-spacing:.13em;color:#72cbd0;font-weight:900}
+    .resultTop{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start}
+    .topLabel{font-size:clamp(2rem,5vw,3.25rem);line-height:1;font-weight:950;margin:8px 0 6px;letter-spacing:-.04em}
+    .confidence{font-weight:850;color:#a0e9ec;font-size:.86rem}
+    .scoreRing{--p:0;width:88px;height:88px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--cyan) calc(var(--p)*1%),rgba(255,255,255,.06) 0);position:relative}
+    .scoreRing:before{content:"";position:absolute;inset:7px;border-radius:50%;background:#0d2027}.scoreRing b{position:relative;font-size:1.05rem}
+    .divider{height:1px;background:var(--line);margin:19px 0}
+    .bars{display:grid;gap:13px}.barRow{display:grid;gap:7px}.barMeta{display:flex;justify-content:space-between;font-size:.8rem}.barMeta span{color:#acd2d6}
+    .track{height:8px;background:rgba(255,255,255,.055);border-radius:99px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,var(--cyan2),var(--cyan),#86ffd0);border-radius:inherit;box-shadow:0 0 14px rgba(85,230,235,.18)}
+    .notice{margin-top:18px;padding:12px 13px;border:1px solid rgba(255,205,112,.18);background:rgba(255,205,112,.055);border-radius:11px;color:#e9ca8c;font-size:.76rem;line-height:1.5}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:18px}
+    .stat{border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.025);padding:15px}
+    .stat small{display:block;color:var(--muted);font-size:.69rem;text-transform:uppercase;letter-spacing:.08em}.stat strong{display:block;margin-top:6px;font-size:1rem}.stat em{display:block;margin-top:5px;color:#82cdd1;font-size:.73rem;font-style:normal}
+    footer{text-align:center;color:#67878d;font-size:.72rem;padding:22px 0 0}
+    .analyzing .scanFrame:after{content:"ANALYZING";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:8px 11px;border-radius:8px;background:rgba(3,13,17,.78);border:1px solid rgba(85,230,235,.28);font-size:.72rem;letter-spacing:.15em;color:#b8fbff;font-weight:900}
+    @media(max-width:940px){.app{grid-template-columns:1fr}.side{display:none}.dashboard{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.topbar{padding:0 18px}.content{padding:20px}.heroTitle{align-items:flex-start;flex-direction:column}.fields{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -71,102 +95,116 @@
   <aside class="side">
     <div class="brand">
       <div class="logo">M</div>
-      <div><h1>MammoMind</h1><p>Clinical Review Prototype</p></div>
+      <div><h1>MammoMind</h1><p>AI Imaging Research Console</p></div>
     </div>
     <div class="nav">
-      <div class="active">▣ Ultrasound Review</div>
-      <div>◫ Case History</div>
-      <div>◇ Model Evaluation</div>
-      <div>⚙ Research Settings</div>
+      <div class="active">◉ Scan Analysis</div>
+      <div>▦ Case Workspace</div>
+      <div>⌁ Model Metrics</div>
+      <div>⚙ Research Lab</div>
     </div>
-    <div class="sideFoot">TKS research prototype<br>Educational use only<br>Not a medical device</div>
+    <div class="sideStat">
+      <strong><span class="liveDot"></span> Prototype online</strong>
+      <p>Educational research environment. Not validated for diagnosis or clinical decision-making.</p>
+    </div>
   </aside>
 
   <main class="main">
     <div class="topbar">
-      <div><h2>Breast Ultrasound Review</h2><span>AI-assisted image classification prototype</span></div>
-      <div class="pill">RESEARCH MODE</div>
+      <div><h2>Breast Ultrasound Intelligence</h2><span>Image classification workspace</span></div>
+      <div class="research">● RESEARCH MODE</div>
     </div>
 
     <div class="content">
-      <div class="intro">
-        <div><h3>New ultrasound case</h3><p>Upload a breast ultrasound image to generate a prototype AI assessment.</p></div>
-        <div class="caseTag">Demo workflow • Do not enter real patient information</div>
+      <div class="heroTitle">
+        <div><h3>Analyze an ultrasound scan.</h3><p>Upload an image and run the research model through a clinician-inspired workflow.</p></div>
+        <div class="caseCode">CASE / DEMO-001</div>
       </div>
 
-      <section class="grid">
-        <div class="card">
-          <div class="cardTitle">Case input</div>
-          <div class="caseFields">
-            <div class="field"><label>Case ID</label><input value="DEMO-001" aria-label="Demo case ID"></div>
-            <div class="field"><label>Scan type</label><select><option>Breast ultrasound</option></select></div>
-          </div>
+      <section class="dashboard">
+        <div class="panel">
+          <div class="panelHead"><strong>Imaging workspace</strong><span>Local image preview</span></div>
+          <div class="panelBody">
+            <div class="fields">
+              <div class="field"><label>Case ID</label><input value="DEMO-001" aria-label="Demo case ID"></div>
+              <div class="field"><label>Modality</label><select><option>Breast ultrasound</option></select></div>
+            </div>
 
-          <div id="dropZone" class="upload">
-            <div class="uploadIcon">⌁</div>
-            <h4>Upload ultrasound image</h4>
-            <p>PNG, JPG or JPEG screenshot. Processing occurs in your browser.</p>
-            <label class="fileBtn" for="fileInput">Select ultrasound</label>
-            <input id="fileInput" type="file" accept="image/*">
-          </div>
+            <div id="dropZone" class="upload">
+              <div>
+                <div class="uploadIcon">⌁</div>
+                <h4>Drop ultrasound scan here</h4>
+                <p>Select a PNG, JPG or JPEG image. The image stays in your browser while the prototype model runs.</p>
+                <label class="fileBtn" for="fileInput">Choose ultrasound scan</label>
+                <input id="fileInput" type="file" accept="image/*">
+              </div>
+            </div>
 
-          <div id="previewBox" class="preview">
-            <div class="scanFrame"><img id="preview" alt="Uploaded ultrasound preview"></div>
-            <div class="actions">
-              <button id="analyzeBtn" class="primary" disabled>Run AI review</button>
-              <button id="resetBtn" class="secondary">Clear case</button>
+            <div id="previewBox" class="preview">
+              <div id="scanFrame" class="scanFrame"><div class="scanCorners"></div><img id="preview" alt="Uploaded ultrasound preview"></div>
+              <div class="actions">
+                <button id="analyzeBtn" class="primary" disabled>✦ Run AI Analysis</button>
+                <button id="resetBtn" class="secondary">Clear scan</button>
+              </div>
+            </div>
+            <div id="status" class="status">Initializing research model…</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panelHead"><strong>AI assessment</strong><span>Model output</span></div>
+          <div class="panelBody">
+            <div id="resultEmpty" class="resultEmpty">
+              <div><div class="orb"></div><strong>Awaiting scan</strong><span>Your model output will appear here after analysis.</span></div>
+            </div>
+
+            <div id="resultBox" style="display:none">
+              <div class="resultTop">
+                <div>
+                  <div class="eyebrow">Prototype classification</div>
+                  <div id="topLabel" class="topLabel">—</div>
+                  <div id="topConfidence" class="confidence">—</div>
+                </div>
+                <div id="scoreRing" class="scoreRing"><b id="scoreText">0%</b></div>
+              </div>
+              <div class="divider"></div>
+              <div class="eyebrow" style="margin-bottom:11px">Probability distribution</div>
+              <div id="bars" class="bars"></div>
+              <div class="notice"><strong>Research prototype.</strong> This output is not a medical diagnosis, has not been clinically validated, and must not be used for patient-care decisions.</div>
             </div>
           </div>
-
-          <div id="status" class="status">Loading research model…</div>
-        </div>
-
-        <div class="card">
-          <div class="cardTitle">AI assessment</div>
-          <div id="resultEmpty" class="resultEmpty">
-            <div><span class="icon">⌕</span><strong>No scan analyzed yet</strong><br><span>Upload an ultrasound image and run the AI review.</span></div>
-          </div>
-
-          <div id="resultBox" style="display:none">
-            <div class="eyebrow">Prototype classification</div>
-            <div id="topLabel" class="topLabel">—</div>
-            <div id="topConfidence" class="confidence">—</div>
-            <div class="divider"></div>
-            <div class="eyebrow" style="margin-bottom:10px">Class probabilities</div>
-            <div id="bars" class="bars"></div>
-            <div class="notice"><strong>Research prototype only.</strong> This output is not a diagnosis, has not been clinically validated, and must not be used for patient-care decisions.</div>
-          </div>
         </div>
       </section>
 
-      <section class="miniGrid">
-        <div class="mini"><strong>1. Upload scan</strong><span>A clinician-style workflow for selecting a breast ultrasound image.</span></div>
-        <div class="mini"><strong>2. AI review</strong><span>The research model returns a predicted class and confidence distribution.</span></div>
-        <div class="mini"><strong>3. Human review</strong><span>In a real clinical system, qualified clinicians would interpret imaging alongside the full medical context.</span></div>
+      <section class="stats">
+        <div class="stat"><small>System</small><strong>Browser inference</strong><em>No server upload required</em></div>
+        <div class="stat"><small>Input</small><strong>Ultrasound image</strong><em>PNG • JPG • JPEG</em></div>
+        <div class="stat"><small>Project status</small><strong>TKS prototype</strong><em>Research & education only</em></div>
       </section>
 
-      <footer>MammoMind • TKS educational research prototype • Not for clinical use</footer>
+      <footer>MammoMind • Educational AI imaging prototype • Not for clinical use</footer>
     </div>
   </main>
 </div>
 
 <script>
-const MODEL_BASE = "https://teachablemachine.withgoogle.com/models/3cIuGEPRp/";
-let model = null;
-let currentPredictions = [];
-
-const fileInput = document.getElementById("fileInput");
-const dropZone = document.getElementById("dropZone");
-const previewBox = document.getElementById("previewBox");
-const preview = document.getElementById("preview");
-const analyzeBtn = document.getElementById("analyzeBtn");
-const resetBtn = document.getElementById("resetBtn");
-const statusEl = document.getElementById("status");
-const resultEmpty = document.getElementById("resultEmpty");
-const resultBox = document.getElementById("resultBox");
-const topLabelEl = document.getElementById("topLabel");
-const topConfidenceEl = document.getElementById("topConfidence");
-const bars = document.getElementById("bars");
+const MODEL_BASE="https://teachablemachine.withgoogle.com/models/3cIuGEPRp/";
+let model=null;
+const fileInput=document.getElementById("fileInput");
+const dropZone=document.getElementById("dropZone");
+const previewBox=document.getElementById("previewBox");
+const preview=document.getElementById("preview");
+const analyzeBtn=document.getElementById("analyzeBtn");
+const resetBtn=document.getElementById("resetBtn");
+const statusEl=document.getElementById("status");
+const resultEmpty=document.getElementById("resultEmpty");
+const resultBox=document.getElementById("resultBox");
+const topLabelEl=document.getElementById("topLabel");
+const topConfidenceEl=document.getElementById("topConfidence");
+const bars=document.getElementById("bars");
+const scoreRing=document.getElementById("scoreRing");
+const scoreText=document.getElementById("scoreText");
+const scanFrame=document.getElementById("scanFrame");
 
 function setStatus(message,type=""){
   statusEl.textContent=message;
@@ -177,10 +215,10 @@ async function loadModel(){
   try{
     model=await tmImage.load(MODEL_BASE+"model.json",MODEL_BASE+"metadata.json");
     analyzeBtn.disabled=!preview.src;
-    setStatus("Research model loaded. Ready for ultrasound review.","ok");
+    setStatus("Model online • Ready for research analysis","ok");
   }catch(error){
     console.error(error);
-    setStatus("The research model could not load. Check your connection and reload.","err");
+    setStatus("Research model could not load. Check your connection and reload.","err");
   }
 }
 
@@ -193,7 +231,7 @@ function useFile(file){
   preview.onload=()=>{
     previewBox.style.display="block";
     analyzeBtn.disabled=!model;
-    setStatus(model?"Ultrasound image ready. Select Run AI review.":"Image ready. Waiting for model…");
+    setStatus(model?"Scan loaded • Ready to analyze":"Scan loaded • Waiting for model…");
   };
   preview.src=url;
   resultBox.style.display="none";
@@ -208,31 +246,36 @@ dropZone.addEventListener("drop",e=>useFile(e.dataTransfer.files[0]));
 analyzeBtn.addEventListener("click",async()=>{
   if(!model||!preview.src)return;
   analyzeBtn.disabled=true;
-  setStatus("Running prototype AI review…");
+  previewBox.classList.add("analyzing");
+  setStatus("Analyzing image patterns…");
   try{
+    await new Promise(r=>setTimeout(r,650));
     const predictions=await model.predict(preview);
     predictions.sort((a,b)=>b.probability-a.probability);
-    currentPredictions=predictions;
     const top=predictions[0];
+    const pct=top?(top.probability*100):0;
     topLabelEl.textContent=top?.className||"Inconclusive";
-    topConfidenceEl.textContent=top?((top.probability*100).toFixed(1)+"% model confidence"):"No result";
+    topConfidenceEl.textContent=top?pct.toFixed(1)+"% model confidence":"No result";
+    scoreText.textContent=pct.toFixed(0)+"%";
+    scoreRing.style.setProperty("--p",pct.toFixed(1));
 
     bars.innerHTML="";
     predictions.forEach(p=>{
       const row=document.createElement("div");
       row.className="barRow";
-      const pct=(p.probability*100).toFixed(1);
-      row.innerHTML='<div class="barMeta"><strong>'+escapeHtml(p.className)+'</strong><span>'+pct+'%</span></div><div class="track"><div class="fill" style="width:'+pct+'%"></div></div>';
+      const p100=(p.probability*100).toFixed(1);
+      row.innerHTML='<div class="barMeta"><strong>'+escapeHtml(p.className)+'</strong><span>'+p100+'%</span></div><div class="track"><div class="fill" style="width:'+p100+'%"></div></div>';
       bars.appendChild(row);
     });
 
     resultEmpty.style.display="none";
     resultBox.style.display="block";
-    setStatus("Prototype assessment complete.","ok");
+    setStatus("Analysis complete • Prototype result generated","ok");
   }catch(error){
     console.error(error);
-    setStatus("Review failed. Try another image or reload the page.","err");
+    setStatus("Analysis failed. Try another image or reload the page.","err");
   }finally{
+    previewBox.classList.remove("analyzing");
     analyzeBtn.disabled=false;
   }
 });
@@ -243,15 +286,15 @@ resetBtn.addEventListener("click",()=>{
   fileInput.value="";
   resultBox.style.display="none";
   resultEmpty.style.display="grid";
-  currentPredictions=[];
   analyzeBtn.disabled=true;
-  setStatus(model?"Research model ready. Select another ultrasound image.":"Loading research model…",model?"ok":"");
+  scoreRing.style.setProperty("--p",0);
+  scoreText.textContent="0%";
+  setStatus(model?"Model online • Ready for another scan":"Initializing research model…",model?"ok":"");
 });
 
 function escapeHtml(str){
   return String(str).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 }
-
 loadModel();
 </script>
 </body>
