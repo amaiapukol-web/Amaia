@@ -58,7 +58,7 @@
 </div>
 <script>
 let current=null, objectUrl=null;
-const labels=["Normal — simulated demo","Benign — simulated demo","Malignant — simulated demo"];
+const labels=["Normal","Benign","Malignant"];
 const file=document.getElementById("file"),preview=document.getElementById("preview"),previewBox=document.getElementById("previewBox"),run=document.getElementById("run"),reset=document.getElementById("reset"),status=document.getElementById("status"),empty=document.getElementById("empty"),result=document.getElementById("result"),label=document.getElementById("label"),confidence=document.getElementById("confidence"),bars=document.getElementById("bars");
 file.addEventListener("change",e=>useFile(e.target.files[0]));
 function useFile(f){if(!f||!f.type.startsWith("image/"))return;if(objectUrl)URL.revokeObjectURL(objectUrl);objectUrl=URL.createObjectURL(f);preview.onload=()=>{previewBox.style.display="block";status.textContent="Image loaded • Ready to generate a demo result";status.className="status ok"};preview.src=objectUrl;result.style.display="none";empty.style.display="grid"}
