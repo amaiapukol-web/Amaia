@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="46%" r="78%">
+      <stop offset="0" stop-color="#071127"/>
+      <stop offset=".48" stop-color="#04091b"/>
+      <stop offset="1" stop-color="#02040d"/>
+    </radialGradient>
+    <linearGradient id="btn" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071025"/>
+      <stop offset=".55" stop-color="#0d1a43"/>
+      <stop offset="1" stop-color="#132e75"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="12" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <g fill="#eef6ff" opacity=".9">
+    <circle cx="88" cy="122" r="2"/>
+    <circle cx="186" cy="82" r="1.5"/>
+    <circle cx="270" cy="170" r="2.5"/>
+    <circle cx="382" cy="92" r="1.6"/>
+    <circle cx="510" cy="142" r="2"/>
+    <circle cx="690" cy="95" r="1.6"/>
+    <circle cx="814" cy="150" r="2.5"/>
+    <circle cx="960" cy="102" r="2"/>
+    <circle cx="1090" cy="168" r="1.5"/>
+    <circle cx="1115" cy="300" r="2.2"/>
+    <circle cx="1020" cy="450" r="1.8"/>
+    <circle cx="892" cy="530" r="2"/>
+    <circle cx="705" cy="495" r="1.4"/>
+    <circle cx="520" cy="545" r="2.2"/>
+    <circle cx="350" cy="470" r="1.7"/>
+    <circle cx="190" cy="520" r="2"/>
+    <circle cx="78" cy="405" r="1.5"/>
+  </g>
+
+  <g stroke-linecap="round" opacity=".72">
+    <g stroke="#dbeafe"><path d="M270 154v32M254 170h32"/></g>
+    <g stroke="#93c5fd"><path d="M814 132v36M796 150h36"/></g>
+    <g stroke="#c4b5fd"><path d="M1020 438v24M1008 450h24"/></g>
+    <g stroke="#7dd3fc"><path d="M190 508v24M178 520h24"/></g>
+  </g>
+
+  <rect x="350" y="250" width="500" height="130" rx="65" fill="#0a1029" opacity=".58" filter="url(#glow)"/>
+  <rect x="360" y="255" width="480" height="120" rx="60" fill="url(#btn)" stroke="#839ad6" stroke-width="2.5"/>
+
+  <text x="600" y="333" text-anchor="middle"
+        font-family="Inter,Segoe UI,Arial,sans-serif"
+        font-size="54" font-weight="800" fill="#ffffff">Enter Mamoid →</text>
+</svg>
