@@ -18,7 +18,7 @@
     .cover{position:relative;min-height:100vh;display:grid;place-items:center;background:#01030a;overflow:hidden}
     .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;filter:saturate(1.12) contrast(1.05) brightness(.82);transform:scale(1.03)}
     .shade{position:absolute;inset:0;background:radial-gradient(circle at 50% 62%,rgba(26,50,120,.08),transparent 30%),linear-gradient(180deg,rgba(0,0,0,.08),rgba(1,4,14,.34) 62%,rgba(0,0,0,.56))}
-    .content{position:relative;z-index:3;width:100%;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 20px max(38px,6vh);text-align:center;pointer-events:none}
+    .content{position:relative;z-index:3;width:100%;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;pointer-events:none}
     .title{display:none;margin:0 0 18px;font-size:clamp(4rem,16vw,8rem);line-height:.9;font-weight:950;letter-spacing:-.06em;background:linear-gradient(90deg,#76d7ff 0%,#f8fbff 48%,#95a8ff 75%,#7c3aed 100%);-webkit-background-clip:text;color:transparent;text-shadow:0 0 28px rgba(63,172,255,.16);filter:drop-shadow(0 0 14px rgba(70,130,255,.28))}
     .buttonWrap{position:relative;display:grid;place-items:center;min-width:340px;min-height:130px;pointer-events:auto}
     .enter{position:relative;z-index:3;text-decoration:none;color:white;font-weight:950;font-size:clamp(1.1rem,4vw,1.45rem);padding:18px 34px;min-width:250px;border-radius:999px;border:1px solid rgba(255,255,255,.42);background:linear-gradient(135deg,rgba(7,14,38,.95),rgba(19,35,88,.92) 58%,rgba(27,50,130,.94));backdrop-filter:blur(14px);box-shadow:0 18px 45px rgba(0,0,0,.54),0 0 18px rgba(73,149,255,.62),0 0 42px rgba(43,91,255,.38),inset 0 0 24px rgba(111,185,255,.08);white-space:nowrap;animation:buttonPulse 2.7s ease-in-out infinite}
@@ -31,7 +31,7 @@
     @keyframes twinkle{0%,100%{opacity:.18;transform:scale(.72) rotate(0deg)}50%{opacity:1;transform:scale(1.24) rotate(12deg)}}
     @keyframes buttonPulse{0%,100%{transform:scale(1);box-shadow:0 18px 45px rgba(0,0,0,.54),0 0 18px rgba(73,149,255,.52),0 0 42px rgba(43,91,255,.28)}50%{transform:scale(1.035);box-shadow:0 20px 50px rgba(0,0,0,.56),0 0 25px rgba(84,185,255,.78),0 0 58px rgba(38,95,255,.48)}}
     @keyframes ringPulse{0%,100%{opacity:.35;transform:scale(.98)}50%{opacity:.9;transform:scale(1.07)}}
-    @media (max-width:700px){.content{padding-bottom:max(28px,5vh)}.title{font-size:clamp(4.3rem,23vw,7rem);margin-bottom:12px}.buttonWrap{min-width:300px;min-height:120px}.enter{min-width:235px;padding:17px 28px;font-size:1.12rem}.s7{left:10%;top:66%}.s8{left:86%;top:63%}.s10{left:68%;top:78%}.s13{left:5%;top:82%}}
+    @media (max-width:700px){.content{padding:20px}.title{font-size:clamp(4.3rem,23vw,7rem);margin-bottom:12px}.buttonWrap{min-width:300px;min-height:120px}.enter{min-width:235px;padding:17px 28px;font-size:1.12rem}.s7{left:10%;top:66%}.s8{left:86%;top:63%}.s10{left:68%;top:78%}.s13{left:5%;top:82%}}
   </style>
 </head>
 <body>
