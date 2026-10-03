@@ -1049,6 +1049,26 @@
       }
     }
 
+
+    /* Final placement tweak: center Enter Mamoid, change nothing else */
+    .realEnterBtn{
+      top:50% !important;
+      bottom:auto !important;
+      transform:translate(-50%,-50%) !important;
+    }
+
+    .realEnterBtn:hover{
+      transform:translate(-50%,-50%) scale(1.015) !important;
+    }
+
+    @media(max-width:850px){
+      .realEnterBtn{
+        top:50% !important;
+        bottom:auto !important;
+        transform:translate(-50%,-50%) !important;
+      }
+    }
+
 </style>
   <meta property="og:title" content="Mamoid — Educational AI Imaging Demo" />
   <meta property="og:description" content="Educational AI imaging demo for a student project." />
