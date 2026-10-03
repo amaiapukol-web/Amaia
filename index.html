@@ -36,12 +36,12 @@
 </div></div>
 <div class="panel"><div class="head"><strong>Classification panel</strong><span>Simulated result</span></div><div class="body">
 <div id="empty" class="empty"><div><div class="orb"></div><strong>Awaiting case image</strong><div style="margin-top:7px;font-size:.82rem">Upload a scan to populate the simulated classification panel.</div></div></div>
-<div id="result" style="display:none"><div class="eyebrow">Randomized simulated category</div><div id="label" class="label">—</div><div id="confidence" class="confidence">—</div><div id="bars" class="bars"></div><div class="notice"><strong>Demo only.</strong> Normal, Benign, and Malignant here are presentation categories only. The percentages and result are randomly generated, are not derived from the uploaded image, and must not be used for diagnosis or healthcare decisions.</div></div>
+<div id="result" style="display:none"><div class="eyebrow">Simulated category</div><div id="label" class="label">—</div><div id="confidence" class="confidence">—</div><div id="bars" class="bars"></div><div class="notice"><strong>Demo only.</strong> Normal, Benign, and Non-benign here are presentation categories only. The percentages and result are simulated for interface demonstration, are not derived from the uploaded image, and must not be used for diagnosis or healthcare decisions.</div></div>
 </div></div>
 </section>
 <section class="how">
     <div class="howCard"><h4>1. Upload</h4><p>Your image is shown locally as a preview. This demo does not inspect the image for disease features.</p></div>
-    <div class="howCard"><h4>2. Simulated score</h4><p>The percentages are randomly generated so the interface behaves like a classification dashboard. They are not probabilities calculated from the image.</p></div>
+    <div class="howCard"><h4>2. Simulated score</h4><p>The percentages are simulated so the interface behaves like a classification dashboard. They are not probabilities calculated from the image.</p></div>
     <div class="howCard"><h4>3. Result display</h4><p>One demo category receives the highest simulated score and the other two share the remainder. Running it again can produce a different result.</p></div>
   </section>
   <section class="mapping">
@@ -49,21 +49,21 @@
     <div class="mappingGrid">
       <div class="mapItem"><strong>Normal — simulated demo</strong><span>Represents the interface state for an example with no suspicious finding. This is only a demonstration label.</span></div>
       <div class="mapItem"><strong>Benign — simulated demo</strong><span>Represents the interface state for an example intended to resemble a non-cancerous category. This is not a diagnosis.</span></div>
-      <div class="mapItem"><strong>Malignant — simulated demo</strong><span>Represents the interface state for an example intended to resemble a malignant category. The result is random and not based on the uploaded image.</span></div>
+      <div class="mapItem"><strong>Non-benign — simulated demo</strong><span>Represents the interface state for an example intended to resemble a non-benign category. The result is simulated and not based on the uploaded image.</span></div>
     </div>
   </section>
-  <footer>MammoMind • Randomized educational interface demo • Not a medical device</footer>
+  <footer>MammoMind • Educational interface simulation • Not a medical device</footer>
 </div>
 </main>
 </div>
 <script>
 let current=null, objectUrl=null;
-const labels=["Normal","Benign","Malignant"];
+const labels=["Normal","Benign","Non-benign"];
 const file=document.getElementById("file"),preview=document.getElementById("preview"),previewBox=document.getElementById("previewBox"),run=document.getElementById("run"),reset=document.getElementById("reset"),status=document.getElementById("status"),empty=document.getElementById("empty"),result=document.getElementById("result"),label=document.getElementById("label"),confidence=document.getElementById("confidence"),bars=document.getElementById("bars");
 file.addEventListener("change",e=>useFile(e.target.files[0]));
 function useFile(f){if(!f||!f.type.startsWith("image/"))return;if(objectUrl)URL.revokeObjectURL(objectUrl);objectUrl=URL.createObjectURL(f);preview.onload=()=>{previewBox.style.display="block";status.textContent="Image loaded • Ready to generate a demo result";status.className="status ok"};preview.src=objectUrl;result.style.display="none";empty.style.display="grid"}
 function predictions(){const options=labels.filter(x=>x!==current);const winner=options[Math.floor(Math.random()*options.length)];current=winner;const top=.58+Math.random()*.34,remain=1-top,split=.2+Math.random()*.6,others=labels.filter(x=>x!==winner);return[{name:winner,p:top},{name:others[0],p:remain*split},{name:others[1],p:remain*(1-split)}].sort((a,b)=>b.p-a.p)}
-run.addEventListener("click",async()=>{run.disabled=true;status.textContent="Generating randomized demonstration…";await new Promise(r=>setTimeout(r,500));const ps=predictions(),t=ps[0];label.textContent=t.name;confidence.textContent=(t.p*100).toFixed(1)+"% simulated score";bars.innerHTML="";ps.forEach(x=>{const pct=(x.p*100).toFixed(1),row=document.createElement("div");row.innerHTML='<div class="meta"><strong>'+x.name+'</strong><span>'+pct+'%</span></div><div class="track"><div class="fill" style="width:'+pct+'%"></div></div>';bars.appendChild(row)});empty.style.display="none";result.style.display="block";status.textContent="Simulated result generated • Run again for another outcome";status.className="status ok";run.disabled=false});
+run.addEventListener("click",async()=>{run.disabled=true;status.textContent="Generating simulated demonstration…";await new Promise(r=>setTimeout(r,500));const ps=predictions(),t=ps[0];label.textContent=t.name;confidence.textContent=(t.p*100).toFixed(1)+"% simulated score";bars.innerHTML="";ps.forEach(x=>{const pct=(x.p*100).toFixed(1),row=document.createElement("div");row.innerHTML='<div class="meta"><strong>'+x.name+'</strong><span>'+pct+'%</span></div><div class="track"><div class="fill" style="width:'+pct+'%"></div></div>';bars.appendChild(row)});empty.style.display="none";result.style.display="block";status.textContent="Simulated result generated • Run again for another outcome";status.className="status ok";run.disabled=false});
 reset.addEventListener("click",()=>{if(objectUrl)URL.revokeObjectURL(objectUrl);objectUrl=null;preview.removeAttribute("src");previewBox.style.display="none";file.value="";result.style.display="none";empty.style.display="grid";current=null;status.textContent="Demo ready • Choose another image";status.className="status"});
 </script>
 </body>
