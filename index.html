@@ -115,6 +115,12 @@
       color:#8992b5;
       font-size:.88rem;
       font-weight:700;
+      cursor:pointer;
+    }
+
+    .nav div:not(.active):hover{
+      color:#cbd5ff;
+      background:rgba(91,109,255,.07);
     }
 
     .nav .active{
@@ -438,6 +444,87 @@
       font-size:.78rem;
       line-height:1.5;
       margin-bottom:0;
+    }
+
+    .researchDisclosure{
+      margin-top:18px;
+      border:1px solid rgba(138,164,255,.22);
+      border-radius:18px;
+      background:linear-gradient(180deg,rgba(14,18,38,.86),rgba(8,11,24,.90));
+      overflow:hidden;
+      box-shadow:0 16px 44px rgba(0,0,0,.20);
+    }
+
+    .researchDisclosure summary{
+      list-style:none;
+      cursor:pointer;
+      padding:16px 18px;
+      font-size:.88rem;
+      font-weight:900;
+      color:#dbe4ff;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .researchDisclosure summary::-webkit-details-marker{display:none}
+    .researchDisclosure summary::after{
+      content:"+";
+      color:#9fb3ff;
+      font-size:1.1rem;
+      font-weight:700;
+    }
+    .researchDisclosure[open] summary::after{content:"–"}
+
+    .researchBody{
+      border-top:1px solid rgba(138,164,255,.14);
+      padding:16px 18px 18px;
+    }
+
+    .researchLead{
+      margin:0 0 14px;
+      color:var(--muted);
+      font-size:.79rem;
+      line-height:1.6;
+    }
+
+    .researchGrid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+    }
+
+    .researchItem{
+      padding:14px;
+      border:1px solid rgba(138,164,255,.14);
+      border-radius:14px;
+      background:rgba(255,255,255,.018);
+    }
+
+    .researchItem strong{
+      display:block;
+      margin-bottom:6px;
+      font-size:.78rem;
+      color:#dce5ff;
+    }
+
+    .researchItem p{
+      margin:0;
+      color:#909abd;
+      font-size:.72rem;
+      line-height:1.55;
+    }
+
+    .safetyStrip{
+      margin-top:12px;
+      padding:12px 14px;
+      border:1px solid rgba(255,196,120,.18);
+      border-radius:12px;
+      background:rgba(255,170,70,.035);
+      color:#b7bdd6;
+      font-size:.69rem;
+      line-height:1.55;
     }
 
     footer{
@@ -845,6 +932,9 @@
       .label{font-size:clamp(2rem,12vw,2.8rem)}
       .lower{grid-template-columns:1fr;gap:10px;margin-top:14px}
       .howCard{padding:14px}
+      .researchGrid{grid-template-columns:1fr}
+      .researchDisclosure summary{padding:14px 15px;font-size:.82rem}
+      .researchBody{padding:14px 15px 16px}
       footer{padding-top:16px}
     }
     @media (max-width:390px){
@@ -1793,9 +1883,9 @@
     </div>
 
     <div class="nav">
-      <div class="active">✦ Image Analysis</div>
-      <div>◈ Project Overview</div>
-      <div>⌁ Research</div>
+      <div class="active" data-scroll="analysisSection">✦ Image Analysis</div>
+      <div data-open-research="true">◈ Project Overview</div>
+      <div data-open-research="true">⌁ Research</div>
     </div>
 
     <div class="sideNote">
@@ -1822,7 +1912,7 @@
         </p>
       </section>
 
-      <section class="grid">
+      <section class="grid" id="analysisSection">
 
         <article class="panel">
 
@@ -1836,7 +1926,7 @@
             <div id="uploadArea" class="upload">
               <div>
                 <h3>Upload breast image</h3>
-                <p>Choose an image from your device.</p>
+                <p>Choose a de-identified educational or research image from your device. The selected file is previewed locally in your browser.</p>
 
                 <label for="fileInput" class="fileBtn">
                   Choose Image
@@ -1933,7 +2023,7 @@
               ></div>
 
               <div class="notice">
-                Educational demo only — not a diagnosis.
+                Research prototype • simulated output • not a diagnosis or medical device. These values must not be used for clinical decisions.
               </div>
 
             </div>
@@ -1948,28 +2038,71 @@
         <div class="howCard">
           <strong>01 — Upload</strong>
           <p>
-            Select an image from your device to begin the interface demonstration.
+            Select a de-identified educational or research image. In this version, image previewing happens locally in the browser.
           </p>
         </div>
 
         <div class="howCard">
           <strong>02 — Analyze</strong>
           <p>
-            The prototype generates one of three simulated classification outcomes.
+            The current prototype simulates Normal, Benign, and Malignant outputs to test interface behavior and uncertainty communication; it does not run a clinically validated classifier.
           </p>
         </div>
 
         <div class="howCard">
-          <strong>03 — Explore</strong>
+          <strong>03 — Interpret</strong>
           <p>
-            Compare the displayed categories and probability-style confidence bars.
+            Compare the displayed categories and confidence-style bars as a research interface. The values are simulated and are not medical probabilities.
           </p>
         </div>
 
       </section>
 
+      <details class="researchDisclosure" id="projectNotes">
+        <summary>Research &amp; Safety Notes <span>Technical transparency</span></summary>
+        <div class="researchBody">
+          <p class="researchLead">
+            Mamoid is an educational research prototype exploring how a breast-imaging classifier could communicate three-category outputs and uncertainty in a clear interface. The current version is designed to evaluate the presentation and workflow, not to diagnose disease.
+          </p>
+
+          <div class="researchGrid">
+            <div class="researchItem">
+              <strong>Current system</strong>
+              <p>
+                This version uses client-side HTML, CSS, and JavaScript. A selected image is previewed through a local browser object URL. The demo then generates normalized, simulated scores across Normal, Benign, and Malignant categories; the current generator does not inspect image pixels to determine the label.
+              </p>
+            </div>
+
+            <div class="researchItem">
+              <strong>Research objective</strong>
+              <p>
+                The interface is intended to explore how classification labels, uncertainty, and warnings can be presented without making model confidence look equivalent to a medical diagnosis.
+              </p>
+            </div>
+
+            <div class="researchItem">
+              <strong>Validation standard</strong>
+              <p>
+                A future image-dependent model would require documented data provenance and preprocessing, separated training/validation/test data, held-out and external evaluation, and reporting such as sensitivity, specificity, AUROC, confusion matrices, calibration, and subgroup performance.
+              </p>
+            </div>
+
+            <div class="researchItem">
+              <strong>Development roadmap</strong>
+              <p>
+                A later research version could replace the simulated generator with a trained classifier, document the dataset and model architecture, evaluate performance on unseen images, test calibration and failure cases, and compare performance across clinically relevant subgroups.
+              </p>
+            </div>
+          </div>
+
+          <div class="safetyStrip">
+            <strong>Safety &amp; privacy:</strong> use only de-identified educational or research images. In this prototype, the selected image itself is not transmitted by the analysis code. Mamoid cannot confirm or rule out cancer, has not been clinically validated, and must not be used to make medical decisions. Any real health concern should be evaluated by a qualified healthcare professional.
+          </div>
+        </div>
+      </details>
+
       <footer>
-        Mamoid • Educational demo
+        Mamoid • Educational research prototype • Not for clinical use
       </footer>
 
     </div>
@@ -1982,6 +2115,23 @@
   const splash = document.getElementById("splash");
   const skipSplash = new URLSearchParams(window.location.search).get("app") === "1";
   const enterAppBtn = document.getElementById("enterAppBtn");
+  const projectNotes = document.getElementById("projectNotes");
+
+  document.querySelectorAll("[data-open-research]").forEach(item => {
+    item.addEventListener("click", () => {
+      if (projectNotes) {
+        projectNotes.open = true;
+        projectNotes.scrollIntoView({ behavior:"smooth", block:"start" });
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-scroll]").forEach(item => {
+    item.addEventListener("click", () => {
+      const target = document.getElementById(item.dataset.scroll);
+      if (target) target.scrollIntoView({ behavior:"smooth", block:"start" });
+    });
+  });
 
   if (skipSplash) {
     splash.classList.add("splashHidden");
