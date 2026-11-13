@@ -9,6 +9,13 @@
   const touchPhone=(navigator.maxTouchPoints||0)>0 && Math.min(window.screen.width,window.screen.height)<=820;
   const mobile=override==="mobile"||(override!=="desktop"&&(phoneUA||uaClient||touchPhone));
   document.documentElement.classList.add(mobile?"device-mobile":"device-desktop");
+  // Some in-app browsers render a 980px desktop viewport despite being on a phone.
+  // Set an explicit phone-sized viewport before the page is laid out.
+  const physicalWidth=Math.round(window.screen.width||0);
+  const viewport=document.querySelector('meta[name="viewport"]');
+  if(mobile && viewport && physicalWidth>=300 && physicalWidth<=900){
+    viewport.setAttribute("content","width="+physicalWidth+",initial-scale=1,viewport-fit=cover");
+  }
 })();
 </script><style>
 *{box-sizing:border-box}body{margin:0;background:#08111e;color:#f0f7ff;font:15px system-ui,Arial}header,main{max-width:1350px;margin:auto;padding:24px}header{padding-top:36px}h1{font-size:clamp(27px,4vw,46px);margin:8px 0}p{color:#afc3d7;line-height:1.55}.eyebrow{font-size:12px;letter-spacing:.16em;color:#80e2ca;font-weight:800}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.panel{border:1px solid #3a5066;background:#101f30;border-radius:18px;padding:18px;min-width:0}.proposed{border-color:#5dcab5}h2{margin:6px 0 8px;font-size:23px}.status{font-size:12px;color:#83e1c8}.stage{position:relative;background:#071625;border:1px solid #36516a;border-radius:14px;overflow:hidden;margin-top:12px}.stage svg{width:100%;height:auto;display:block}.stage svg text{font:12px Arial;fill:#e8f4ff;pointer-events:none}.stage svg .tiny{font-size:10px}.clickable{cursor:pointer}.clickable:hover{filter:brightness(1.3)}.axon{stroke:#83d5ff;stroke-width:5;fill:none;stroke-linecap:round}.pulse{fill:#f8ec95;opacity:0}.run .pulse{animation:travel 2.6s linear infinite}.run .light{animation:flash 2.6s linear infinite}.run .musclebar{animation:contract 2.6s ease-in-out infinite;transform-origin:center}.run .pillarL{animation:left 2.6s ease-in-out infinite}.run .pillarR{animation:right 2.6s ease-in-out infinite}.run .particles{animation:drift 2.6s ease-in-out infinite}@keyframes travel{0%,12%{opacity:0;transform:translateX(0)}20%{opacity:1}68%{opacity:1;transform:translateX(240px)}72%,100%{opacity:0;transform:translateX(240px)}}@keyframes flash{0%,10%,35%,100%{opacity:.12}18%,26%{opacity:1}}@keyframes contract{0%,65%,100%{transform:scaleX(1)}76%,88%{transform:scaleX(.84)}}@keyframes left{0%,65%,100%{transform:translateX(0)}76%,88%{transform:translateX(10px)}}@keyframes right{0%,65%,100%{transform:translateX(0)}76%,88%{transform:translateX(-10px)}}@keyframes drift{0%{opacity:.15;transform:translateY(0)}40%{opacity:.95;transform:translateY(55px)}100%{opacity:.25;transform:translateY(75px)}}button{background:#23415b;border:1px solid #58788d;border-radius:10px;padding:11px 14px;color:white;font-weight:700;cursor:pointer}button:hover{background:#305b75}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.primary{background:#137966;border-color:#65d9c0}.readout{background:#0a1725;border:1px solid #294259;border-radius:12px;padding:14px;min-height:105px;margin-top:10px}.readout strong{color:#92e8d2}.readout p{margin:7px 0}.slider{background:#0a1929;border-radius:12px;padding:13px;margin:12px 0}input[type=range]{width:100%;accent-color:#67d9be}.muted{font-size:12px;color:#a2b7ca}.pill{display:inline-block;padding:5px 8px;border:1px solid #547189;border-radius:30px;font-size:11px;color:#c9dce9}.note{border-left:3px solid #8be5cd;padding:8px 16px;margin-top:18px;background:#122337;border-radius:8px}.refs{font-size:13px;margin-top:24px}.refs a{color:#91e9d5}@media(max-width:850px){.grid{grid-template-columns:1fr}}@media(prefers-reduced-motion:reduce){.run *{animation:none!important}}
@@ -393,6 +400,30 @@ document.querySelectorAll("#mobileModelSwitch [data-panel]").forEach(btn=>{
   });
 });
 refreshDevicePanels();
+
+
+/*
+ * Last-resort Gmail/Samsung desktop-viewport correction.
+ * If the browser ignores the viewport meta tag and uses a ~980px layout,
+ * body zoom restores the text/buttons to a readable physical phone width.
+ * A normal phone browser uses no zoom.
+ */
+function ensureReadablePhoneScale(){
+  if(!document.documentElement.classList.contains("device-mobile"))return;
+  const physicalWidth=Number(window.screen.width)||0;
+  const layoutWidth=window.innerWidth;
+  const needsCorrection=physicalWidth>=300&&physicalWidth<=900&&
+    layoutWidth>physicalWidth*1.4;
+  const zoom=needsCorrection?Math.min(3.5,layoutWidth/physicalWidth):1;
+  document.body.style.zoom=needsCorrection?zoom.toFixed(3):"";
+  document.documentElement.classList.toggle("mobile-zoom-fallback",needsCorrection);
+  updateDisclaimerSpacing();
+  updateMobileAnimationControls();
+}
+window.addEventListener("resize",ensureReadablePhoneScale,{passive:true});
+window.addEventListener("pageshow",ensureReadablePhoneScale,{passive:true});
+requestAnimationFrame(ensureReadablePhoneScale);
+setTimeout(ensureReadablePhoneScale,250);
 
 const stars=document.getElementById("stars");const starCount=260;for(let i=0;i<starCount;i++){const s=document.createElement("i");s.className="star";const x=(i*.61803398875%1)*100;const y=(i*.75487766625%1)*100;s.style.left=x.toFixed(3)+"%";s.style.top=y.toFixed(3)+"%";s.style.width=(i%7===0?3:2)+"px";s.style.height=s.style.width;s.style.setProperty("--t",(1.5+(i%13)*.27)+"s");s.style.setProperty("--d",(-i*.29)+"s");stars.appendChild(s)}
 /* Keep floating mobile controls above the actual disclaimer height, even when text wraps. */
